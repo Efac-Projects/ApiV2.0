@@ -9,7 +9,7 @@ namespace App.Shared
     {
         [Required]
         [StringLength(50)]
-        [EmailAddress]
+        [EmailAddress]          
         public string Email { get; set; }
 
         [Required]

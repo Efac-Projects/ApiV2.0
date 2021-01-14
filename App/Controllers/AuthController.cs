@@ -23,7 +23,7 @@ namespace App.Controllers
 
        
         // /api/auth/register
-        [HttpPost]
+        [HttpPost("Register")]
         public async Task<IActionResult> RegisterAsync([FromBody] RegisterViewModel model)
         {
             if (ModelState.IsValid)
