@@ -21,6 +21,9 @@ namespace App.Models
         public int PostalCode { get; set; }
         public DateTime MyProperty { get; set; }
         public DateTime UpdatedAt { get; set; }
-        
+
+        public ICollection<Appointment> Appointments { get; set; }
+        public ICollection<Service> Services { get; set; }
+
     }
 }

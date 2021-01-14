@@ -16,5 +16,7 @@ namespace App.Models
         public string ServiceOwner { get; set; }
         public bool IsAvailable { get; set; }
 
+        public Business Business { get; set; }
+
     }
 }

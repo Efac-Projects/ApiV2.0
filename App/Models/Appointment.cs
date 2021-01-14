@@ -1,13 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace App.Models
 {
-    public class Appiontment
+    public class Appointment
     {
-        public int AppiontmentId { get; set; }
+        [Key]
+        public int AppointmentId { get; set; }
         public int UserId { get; set; }
         public int BusinessId { get; set; }
         public DateTime StartDate { get; set; }
@@ -17,5 +19,9 @@ namespace App.Models
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
         public bool Approved { get; set; }
+        public int ReviewId { get; set; }
+
+        public Business Business { get; set; }
+        //public Review Review { get; set; }
     }
 }
