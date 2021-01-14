@@ -1,8 +1,12 @@
 ﻿using App.Shared;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Configuration;
+using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace App.Service
@@ -10,18 +14,23 @@ namespace App.Service
     public interface IUserService
     {
         Task<UserManagerResponse> RegisterUserAsync(RegisterViewModel model);
+
+        Task<UserManagerResponse> LoginUserAsync(LoginViewModel model);
     }
 
     public class UserService : IUserService
     {
         private UserManager<IdentityUser> _userManger;
+        private IConfiguration _configuration;
 
-        public UserService(UserManager<IdentityUser> userManager)
+        public UserService(UserManager<IdentityUser> userManager, IConfiguration configuration)
         {
             _userManger = userManager;
+            _configuration = configuration;
 
         }
 
+        // Register User
         public async Task<UserManagerResponse> RegisterUserAsync(RegisterViewModel model)
         {
             if (model == null)
@@ -58,6 +67,54 @@ namespace App.Service
                 Errors = result.Errors.Select(e => e.Description)
             };
 
+        }
+
+        // Login User
+        public async Task<UserManagerResponse> LoginUserAsync(LoginViewModel model)
+        {
+            var user = await _userManger.FindByEmailAsync(model.Email);
+
+            if (user == null)
+            {
+                return new UserManagerResponse
+                {
+                    Message = "There is no user with that Email address",
+                    IsSuccess = false,
+                };
+            }
+
+            var result = await _userManger.CheckPasswordAsync(user, model.Password);
+
+            if (!result)
+                return new UserManagerResponse
+                {
+                    Message = "Invalid password",
+                    IsSuccess = false,
+                };
+
+            var claims = new[]
+            {
+                new Claim("Email", model.Email),
+                new Claim(ClaimTypes.NameIdentifier, user.Id),
+            };
+
+            var key = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(_configuration["AuthSettings:Key"]));
+
+            var token = new JwtSecurityToken(
+                issuer: _configuration["AuthSettings:Issuer"],
+                audience: _configuration["AuthSettings:Audience"],
+                claims: claims,
+                expires: DateTime.Now.AddDays(30),
+                signingCredentials: new SigningCredentials(key, SecurityAlgorithms.HmacSha256));
+
+            string tokenAsString = new JwtSecurityTokenHandler().WriteToken(token);
+
+            return new UserManagerResponse
+            {
+                Message = tokenAsString,
+                IsSuccess = true,
+                ExpireDate = token.ValidTo
+            };
         }
     }
 }
