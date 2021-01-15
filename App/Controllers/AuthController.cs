@@ -14,11 +14,12 @@ namespace App.Controllers
     {
 
         private IUserService _userService;
-        
-        public AuthController(IUserService userService)
+        private IMailService _mailService; 
+
+        public AuthController(IUserService userService, IMailService mailService)
         {
             _userService = userService;
-          
+            _mailService = mailService;
         }
 
        
@@ -49,7 +50,7 @@ namespace App.Controllers
 
                 if (result.IsSuccess)
                 {
-                    //await _mailService.SendEmailAsync(model.Email, "New login", "<h1>Hey!, new login to your account noticed</h1><p>New login to your account at " + DateTime.Now + "</p>");
+                    await _mailService.SendEmailAsync(model.Email, "New login", "<h1>Hey!, new login to your account noticed</h1><p>New login to your account at " + DateTime.Now + "</p>");
                     return Ok(result);
                 }
 
