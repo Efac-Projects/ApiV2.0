@@ -1,6 +1,7 @@
 ﻿using App.Service;
 using App.Shared;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,12 +15,14 @@ namespace App.Controllers
     {
 
         private IUserService _userService;
-        private IMailService _mailService; 
+        private IMailService _mailService;
+        private IConfiguration _configuration;
 
-        public AuthController(IUserService userService, IMailService mailService)
+        public AuthController(IUserService userService, IMailService mailService, IConfiguration configuration)
         {
             _userService = userService;
             _mailService = mailService;
+            _configuration = configuration;
         }
 
        
@@ -50,7 +53,7 @@ namespace App.Controllers
 
                 if (result.IsSuccess)
                 {
-                    await _mailService.SendEmailAsync(model.Email, "New login", "<h1>Hey!, new login to your account noticed</h1><p>New login to your account at " + DateTime.Now + "</p>");
+                   // await _mailService.SendEmailAsync(model.Email, "New login", "<h1>Hey!, new login to your account noticed</h1><p>New login to your account at " + DateTime.Now + "</p>");
                     return Ok(result);
                 }
 
@@ -59,5 +62,23 @@ namespace App.Controllers
 
             return BadRequest("Some properties are not valid");
         }
+
+        // /api/auth/confirmemail?userid&token
+        [HttpGet("ConfirmEmail")]
+
+        public async Task<IActionResult> ConfirmEmail(string userId, string token) {
+
+            if (string.IsNullOrWhiteSpace(userId) || string.IsNullOrWhiteSpace(token))
+                return NotFound();
+
+            var result = await _userService.ConfirmEmailAsync(userId, token);
+
+            if (result.IsSuccess)
+            {
+                return Redirect($"{_configuration["AppUrl"]}/ConfirmEmail.html");
+            }
+
+            return BadRequest(result);
+        } 
     }
 }
