@@ -14,14 +14,13 @@ namespace App.Models
         public int CurrentCrowd { get; set; }
         public int EmergencyAppointment { get; set; }
         public string Summary { get; set; }
-        public string Address { get; set; }
+        public string Address { get; set; } //  small issue
         public DateTime PublishedAt { get; set; }
-        public int OwnerId { get; set; }
-        public int PhoneNumber { get; set; }
+        public int UserId { get; set; }
+        public int PhoneNumber { get; set; } // from login
         public int PostalCode { get; set; }
-        public DateTime MyProperty { get; set; }
         public DateTime UpdatedAt { get; set; }
-
+        public bool IsApproved { get; set; }
         public ICollection<Appointment> Appointments { get; set; }
         public ICollection<Service> Services { get; set; }
 

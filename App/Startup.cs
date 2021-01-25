@@ -60,7 +60,7 @@ namespace App
             });
 
             services.AddScoped<IUserService,UserService>();
-
+            services.AddTransient<IMailService, SendGridEmailService>(); // one object for a time
             services.AddControllers();
         }
 
@@ -75,7 +75,7 @@ namespace App
             app.UseHttpsRedirection();
 
             app.UseRouting();
-
+            app.UseStaticFiles();
             app.UseAuthentication();
             app.UseAuthorization();
 
