@@ -9,7 +9,7 @@ namespace App.Models
     {
         public int BusinessId { get; set; }
         public string BusinessType { get; set; }
-        public string BusinnoessName { get; set; }
+        public string BusinessName { get; set; }
         public int TotalCrowd { get; set; }
         public int CurrentCrowd { get; set; }
         public int EmergencyAppointment { get; set; }

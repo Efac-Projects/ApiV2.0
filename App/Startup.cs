@@ -62,6 +62,7 @@ namespace App
             services.AddScoped<IUserService,UserService>();
             services.AddTransient<IMailService, SendGridEmailService>(); // one object for a time
             services.AddControllers();
+           
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
