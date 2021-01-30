@@ -19,5 +19,8 @@ namespace App.Shared
         [Required]
         [StringLength(50, MinimumLength = 5)]
         public string ConfirmPassword { get; set; }
+        
+        [Required]
+        public string UserName { get; set; }
     }
 }

@@ -7,6 +7,8 @@ namespace App.Shared
 {
     public class LoginViewModel
     {
+        
+
         [Required]
         [StringLength(50)]
         [EmailAddress]

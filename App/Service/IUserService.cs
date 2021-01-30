@@ -16,7 +16,6 @@ namespace App.Service
     public interface IUserService
     {
         Task<UserManagerResponse> RegisterUserAsync(RegisterViewModel model);
-
         Task<UserManagerResponse> LoginUserAsync(LoginViewModel model);
         Task<UserManagerResponse> ConfirmEmailAsync(string userId, string token);
     }
@@ -48,11 +47,13 @@ namespace App.Service
                     IsSuccess = false,
                 };
 
+            var FullName = model.UserName;
+
             var identityUser = new IdentityUser
             {
                 Email = model.Email,
-                UserName = model.Email,
-            };
+                UserName = FullName.Substring(0, FullName.IndexOf(" "))
+        };
 
             var result = await _userManger.CreateAsync(identityUser, model.Password);
 
