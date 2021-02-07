@@ -1,4 +1,5 @@
-﻿using App.Shared;
+﻿using App.Controllers;
+using App.Shared;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Configuration;
@@ -25,13 +26,14 @@ namespace App.Service
         private UserManager<IdentityUser> _userManger;
         private IConfiguration _configuration;
         private IMailService _mailService;
+        private RoleManager<IdentityRole> _roleManager;
 
-        public UserService(UserManager<IdentityUser> userManager, IConfiguration configuration, IMailService mailService)
+        public UserService(UserManager<IdentityUser> userManager, IConfiguration configuration, IMailService mailService, RoleManager<IdentityRole> roleManager)
         {
             _userManger = userManager;
             _configuration = configuration;
             _mailService = mailService;
-
+            _roleManager = roleManager;
         }
 
         // Register User
@@ -60,15 +62,31 @@ namespace App.Service
             if (result.Succeeded)
             {
                 // generate token for verify email address
-                var confirmEmailToken = await _userManger.GenerateEmailConfirmationTokenAsync(identityUser);
+                //var confirmEmailToken = await _userManger.GenerateEmailConfirmationTokenAsync(identityUser);
 
-                var encodedEmailToken = Encoding.UTF8.GetBytes(confirmEmailToken);
-                var validEmailToken = WebEncoders.Base64UrlEncode(encodedEmailToken);
+                //var encodedEmailToken = Encoding.UTF8.GetBytes(confirmEmailToken);
+                //var validEmailToken = WebEncoders.Base64UrlEncode(encodedEmailToken);
 
-                string url = $"{_configuration["AppUrl"]}/api/auth/confirmemail?userid={identityUser.Id}&token={validEmailToken}";
+                //string url = $"{_configuration["AppUrl"]}/api/auth/confirmemail?userid={identityUser.Id}&token={validEmailToken}";
 
-                await _mailService.SendEmailAsync(identityUser.Email, "Confirm your email", $"<h1>Welcome to Auth Demo</h1>" +
-                    $"<p>Please confirm your email by <a href='{url}'>Clicking here</a></p>");
+                //await _mailService.SendEmailAsync(identityUser.Email, "Confirm your email", $"<h1>Welcome to Auth Demo</h1>" +
+                //  $"<p>Please confirm your email by <a href='{url}'>Clicking here</a></p>");
+
+                if (!await _roleManager.RoleExistsAsync(UserRoles.User))
+                {
+                    await _roleManager.CreateAsync(new IdentityRole(UserRoles.User));
+                }
+
+                if (!await _roleManager.RoleExistsAsync(UserRoles.Admin))
+                {
+                    await _roleManager.CreateAsync(new IdentityRole(UserRoles.Admin));
+                }
+
+                if (await _roleManager.RoleExistsAsync(UserRoles.User))
+                {
+                    await _userManger.AddToRoleAsync(identityUser, UserRoles.User);
+                }
+
 
                 return new UserManagerResponse
                 {
@@ -86,6 +104,78 @@ namespace App.Service
 
         }
 
+        //Sign up Business
+
+        // Register Admin
+
+        public async Task<UserManagerResponse> RegisterAdminAsync(RegisterViewModel model)
+        {
+            if (model == null)
+                throw new NullReferenceException("Reigster Model is null");
+
+            if (model.Password != model.ConfirmPassword)
+                return new UserManagerResponse
+                {
+                    Message = "Confirm password doesn't match the password",
+                    IsSuccess = false,
+                };
+
+            var FullName = model.UserName;
+
+            var identityUser = new IdentityUser
+            {
+                Email = model.Email,
+                UserName = FullName.Substring(0, FullName.IndexOf(" "))
+            };
+
+            var result = await _userManger.CreateAsync(identityUser, model.Password);
+
+            if (result.Succeeded)
+            {
+                // generate token for verify email address
+                //var confirmEmailToken = await _userManger.GenerateEmailConfirmationTokenAsync(identityUser);
+
+                //var encodedEmailToken = Encoding.UTF8.GetBytes(confirmEmailToken);
+                //var validEmailToken = WebEncoders.Base64UrlEncode(encodedEmailToken);
+
+                //string url = $"{_configuration["AppUrl"]}/api/auth/confirmemail?userid={identityUser.Id}&token={validEmailToken}";
+
+                //await _mailService.SendEmailAsync(identityUser.Email, "Confirm your email", $"<h1>Welcome to Auth Demo</h1>" +
+                //  $"<p>Please confirm your email by <a href='{url}'>Clicking here</a></p>");
+
+                if (!await _roleManager.RoleExistsAsync(UserRoles.User))
+                {
+                    await _roleManager.CreateAsync(new IdentityRole(UserRoles.User));
+                }
+
+                if (!await _roleManager.RoleExistsAsync(UserRoles.Admin))
+                {
+                    await _roleManager.CreateAsync(new IdentityRole(UserRoles.Admin));
+                }
+
+                if (await _roleManager.RoleExistsAsync(UserRoles.Admin))
+                {
+                    await _userManger.AddToRoleAsync(identityUser, UserRoles.Admin);
+                }
+
+
+                return new UserManagerResponse
+                {
+                    Message = "User created successfully!",
+                    IsSuccess = true,
+                };
+            }
+
+            return new UserManagerResponse
+            {
+                Message = "User did not create",
+                IsSuccess = false,
+                Errors = result.Errors.Select(e => e.Description)
+            };
+
+        }
+
+
         // Login User
         public async Task<UserManagerResponse> LoginUserAsync(LoginViewModel model)
         {
@@ -101,6 +191,7 @@ namespace App.Service
             }
 
             var result = await _userManger.CheckPasswordAsync(user, model.Password);
+            var userRoles = await _userManger.GetRolesAsync(user);
 
             if (!result)
                 return new UserManagerResponse
@@ -109,11 +200,16 @@ namespace App.Service
                     IsSuccess = false,
                 };
 
-            var claims = new[]
+            var claims = new List<Claim>
             {
                 new Claim("Email", model.Email),
                 new Claim(ClaimTypes.NameIdentifier, user.Id),
             };
+
+            foreach (var userRole in userRoles)
+            {
+                claims.Add(new Claim(ClaimTypes.Role, userRole));
+            }
 
             var key = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(_configuration["AuthSettings:Key"]));
 
