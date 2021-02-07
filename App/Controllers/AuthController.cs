@@ -26,9 +26,27 @@ namespace App.Controllers
         }
 
        
-        // /api/auth/register
+        // /api/auth/register (register user)
         [HttpPost("Register")]
         public async Task<IActionResult> RegisterAsync([FromBody] RegisterViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var result = await _userService.RegisterUserAsync(model);
+
+                if (result.IsSuccess)
+                    return Ok(result); // Status Code: 200 
+
+                return BadRequest(result);
+            }
+
+            return BadRequest("Some properties are not valid"); // Status code: 400
+        }
+
+        // /api/auth/register (register Admin)
+        [HttpPost()]
+        [Route("register-admin")]
+        public async Task<IActionResult> RegisterAdminAsync([FromBody] RegisterViewModel model)
         {
             if (ModelState.IsValid)
             {
