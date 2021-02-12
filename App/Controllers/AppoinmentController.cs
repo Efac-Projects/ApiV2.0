@@ -21,6 +21,7 @@ namespace App.Controllers
             _context = context;
         }
 
+        // GET: api/Appoinment
         [HttpGet]
         public async Task<ActionResult<IEnumerable<AppointmentView>>> GetAllBusiness()
         {
@@ -29,7 +30,88 @@ namespace App.Controllers
                 ).ToListAsync();
         }
 
+        public async Task<ActionResult<IEnumerable<AppointmentView>>> GetAppoinmentbyId(int id)
+        {
+            var appoinment = await _context.Appointments.FindAsync(id);
 
+            if (appoinment == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(appoinment);
+        }
+
+        // edit appointment
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateAppointment(int id, AppointmentView appointmentView)
+        {
+            // if (id != businessView.BusinessId)
+            // {
+            // return BadRequest();
+            // }
+
+            var appointment = await _context.Appointments.FindAsync(id);
+            if (appointment == null)
+            {
+                return NotFound();
+            }
+
+            appointment.Price = appointmentView.Price;
+            appointment.Total = appointmentView.Total;
+
+
+
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                return NotFound();
+            }
+
+            return Ok();
+        }
+
+        // Post appointment, instead of int for id USE GUID
+        [HttpPost]
+        public async Task<ActionResult<AppointmentView>> CreateAppointment(AppointmentView appointmentView)
+        {
+            var appointment = new Appointment
+            {
+
+                AppointmentId = appointmentView.AppointmentId,
+                Price = appointmentView.Price,
+                Total = appointmentView.Total,
+            };
+
+            _context.Appointments.Add(appointment);
+            await _context.SaveChangesAsync();
+
+            return Ok(appointment);
+
+        }
+
+        // Delete appointment
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteAppointment(int id)
+        {
+            var appointment = await _context.Appointments.FindAsync(id);
+
+            if (appointment == null)
+            {
+                return NotFound();
+            }
+
+            _context.Appointments.Remove(appointment);
+            await _context.SaveChangesAsync();
+
+            return Ok();
+        }
+
+        //  Appointment to AppointmentView
         private static AppointmentView AppointmentViewReturn(Appointment appointment) =>
             new AppointmentView
             {

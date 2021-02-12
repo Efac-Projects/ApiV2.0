@@ -1,15 +1,16 @@
 ﻿using App.Models;
 using App.ViewModel;
 using AspNetIdentityDemo.Api.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace App.Controllers
 {
+    
     [Route("api/[controller]")]
     [ApiController]
     public class BusinessController : ControllerBase
@@ -18,11 +19,12 @@ namespace App.Controllers
 
         public BusinessController(ApplicationDbContext context)
         {
-            _context = context;  
+            _context = context;
         }
 
         // GET: api/Business
         [HttpGet]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<IEnumerable<BusinessView>>> GetAllBusiness()
         {
             return await _context.Businesses.
@@ -31,10 +33,13 @@ namespace App.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<IEnumerable<BusinessView>>> GetBusinessbyId(int id) {
+       
+        public async Task<ActionResult<IEnumerable<BusinessView>>> GetBusinessbyId(int id)
+        {
             var business = await _context.Businesses.FindAsync(id);
 
-            if (business == null) {
+            if (business == null)
+            {
                 return NotFound();
             }
 
@@ -42,12 +47,13 @@ namespace App.Controllers
         }
 
         [HttpPut("{id}")]
+        [Authorize(Roles = "Admin,Business")]
         public async Task<IActionResult> UpdateBusiness(int id, BusinessView businessView)
         {
-           // if (id != businessView.BusinessId)
-           // {
-               // return BadRequest();
-           // }
+            // if (id != businessView.BusinessId)
+            // {
+            // return BadRequest();
+            // }
 
             var business = await _context.Businesses.FindAsync(id);
             if (business == null)
@@ -68,7 +74,7 @@ namespace App.Controllers
             {
                 await _context.SaveChangesAsync();
             }
-            catch (DbUpdateConcurrencyException) 
+            catch (DbUpdateConcurrencyException)
             {
                 return NotFound();
             }
@@ -77,11 +83,12 @@ namespace App.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<BusinessView>> CreateBusiness (BusinessView businessView)
+        [Authorize(Roles = "Business")]
+        public async Task<ActionResult<BusinessView>> CreateBusiness(BusinessView businessView)
         {
             var business = new Business
             {
-              
+
                 BusinessName = businessView.BusinessName,
                 TotalCrowd = businessView.TotalCrowd,
                 CurrentCrowd = businessView.CurrentCrowd,
@@ -94,14 +101,29 @@ namespace App.Controllers
             await _context.SaveChangesAsync();
 
             return Ok(business);
-                
+
         }
 
         // delete method also should be here, sometime not be usefull for this particular case
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteBusiness(int id)
+        {
+            var business = await _context.Businesses.FindAsync(id);
 
+            if (business == null)
+            {
+                return NotFound();
+            }
+
+            _context.Businesses.Remove(business);
+            await _context.SaveChangesAsync();
+
+            return Ok();
+        }
 
         private static BusinessView businessViewReturn(Business business) =>
-            new BusinessView {
+            new BusinessView
+            {
                 BusinessId = business.BusinessId,
                 BusinessName = business.BusinessName,
                 TotalCrowd = business.TotalCrowd,
