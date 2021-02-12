@@ -1,6 +1,7 @@
 ﻿using App.Models;
 using App.ViewModel;
 using AspNetIdentityDemo.Api.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -75,6 +76,41 @@ namespace App.Controllers
             {
                 return NotFound();
             }
+
+            return Ok();
+        }
+
+        [HttpPost]
+        [Authorize(Roles = "Business")]
+        public async Task<ActionResult<ReviewView>> CreateReview(ReviewView reviewView)
+        {
+            var review = new Review
+            {
+
+                ReviewId = reviewView.ReviewId,
+                Comment = reviewView.Comment,
+                Rating = reviewView.Rating
+            };
+
+            _context.Reviews.Add(review);
+            await _context.SaveChangesAsync();
+
+            return Ok(review);
+
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteReview(int id)
+        {
+            var review = await _context.Reviews.FindAsync(id);
+
+            if (review == null)
+            {
+                return NotFound();
+            }
+
+            _context.Reviews.Remove(review);
+            await _context.SaveChangesAsync();
 
             return Ok();
         }
