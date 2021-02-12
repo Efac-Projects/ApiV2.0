@@ -17,6 +17,8 @@ namespace App.Service
     public interface IUserService
     {
         Task<UserManagerResponse> RegisterUserAsync(RegisterViewModel model);
+        Task<UserManagerResponse> RegisterAdminAsync(RegisterViewModel model);
+        Task<UserManagerResponse> RegisterBusinessAsync(RegisterViewModel model);
         Task<UserManagerResponse> LoginUserAsync(LoginViewModel model);
         Task<UserManagerResponse> ConfirmEmailAsync(string userId, string token);
     }
@@ -85,6 +87,7 @@ namespace App.Service
                 if (await _roleManager.RoleExistsAsync(UserRoles.User))
                 {
                     await _userManger.AddToRoleAsync(identityUser, UserRoles.User);
+                    
                 }
 
 
@@ -104,7 +107,78 @@ namespace App.Service
 
         }
 
-        //Sign up Business
+        //Register Business User
+
+        public async Task<UserManagerResponse> RegisterBusinessAsync(RegisterViewModel model)
+        {
+            if (model == null)
+                throw new NullReferenceException("Reigster Model is null");
+
+            if (model.Password != model.ConfirmPassword)
+                return new UserManagerResponse
+                {
+                    Message = "Confirm password doesn't match the password",
+                    IsSuccess = false,
+                };
+
+            var FullName = model.UserName;
+
+            var identityUser = new IdentityUser
+            {
+                Email = model.Email,
+                UserName = FullName.Substring(0, FullName.IndexOf(" "))
+            };
+
+            var result = await _userManger.CreateAsync(identityUser, model.Password);
+
+            if (result.Succeeded)
+            {
+                // generate token for verify email address
+                //var confirmEmailToken = await _userManger.GenerateEmailConfirmationTokenAsync(identityUser);
+
+                //var encodedEmailToken = Encoding.UTF8.GetBytes(confirmEmailToken);
+                //var validEmailToken = WebEncoders.Base64UrlEncode(encodedEmailToken);
+
+                //string url = $"{_configuration["AppUrl"]}/api/auth/confirmemail?userid={identityUser.Id}&token={validEmailToken}";
+
+                //await _mailService.SendEmailAsync(identityUser.Email, "Confirm your email", $"<h1>Welcome to Auth Demo</h1>" +
+                //  $"<p>Please confirm your email by <a href='{url}'>Clicking here</a></p>");
+
+                if (!await _roleManager.RoleExistsAsync(UserRoles.User))
+                {
+                    await _roleManager.CreateAsync(new IdentityRole(UserRoles.User));
+                }
+
+               
+
+                if (!await _roleManager.RoleExistsAsync(UserRoles.Business))
+                {
+                    await _roleManager.CreateAsync(new IdentityRole(UserRoles.Business));
+                }
+
+                if (await _roleManager.RoleExistsAsync(UserRoles.Business))
+                {
+                    await _userManger.AddToRoleAsync(identityUser, UserRoles.Business);
+
+                }
+
+
+                return new UserManagerResponse
+                {
+                    Message = "Business User created successfully!",
+                    IsSuccess = true,
+                };
+            }
+
+            return new UserManagerResponse
+            {
+                Message = "User did not create",
+                IsSuccess = false,
+                Errors = result.Errors.Select(e => e.Description)
+            };
+
+        }
+
 
         // Register Admin
 
@@ -156,12 +230,13 @@ namespace App.Service
                 if (await _roleManager.RoleExistsAsync(UserRoles.Admin))
                 {
                     await _userManger.AddToRoleAsync(identityUser, UserRoles.Admin);
+                    Console.WriteLine("admin created");
                 }
 
 
                 return new UserManagerResponse
                 {
-                    Message = "User created successfully!",
+                    Message = "Admin created successfully!",
                     IsSuccess = true,
                 };
             }
@@ -209,6 +284,7 @@ namespace App.Service
             foreach (var userRole in userRoles)
             {
                 claims.Add(new Claim(ClaimTypes.Role, userRole));
+                Console.WriteLine(userRole.ToString());
             }
 
             var key = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(_configuration["AuthSettings:Key"]));
@@ -228,6 +304,8 @@ namespace App.Service
                 IsSuccess = true,
                 ExpireDate = token.ValidTo
             };
+
+           
         }
 
         public async Task<UserManagerResponse> ConfirmEmailAsync(string userId, string token) {
