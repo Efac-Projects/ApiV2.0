@@ -22,14 +22,64 @@ namespace App.Controllers
             _context = context;
         }
 
+        // GET: api/Review
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<ReviewView>>> GetAllBusiness()
+        public async Task<ActionResult<IEnumerable<ReviewView>>> GetAllReview()
         {
             return await _context.Reviews.
                 Select(x => reviewViewReturn(x)
                 ).ToListAsync();
         }
 
+        // Review by ID
+        [HttpGet("{id}")]
+        public async Task<ActionResult<IEnumerable<ReviewView>>> GetReviewbyId(int id)
+        {
+            var review = await _context.Reviews.FindAsync(id);
+
+            if (review == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(review);
+        }
+
+        // Edit Review
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateBusiness(int id, ReviewView reviewView)
+        {
+            // if (id != businessView.BusinessId)
+            // {
+            // return BadRequest();
+            // }
+
+            var review = await _context.Reviews.FindAsync(id);
+            if (review == null)
+            {
+                return NotFound();
+            }
+
+            review.ReviewId = reviewView.ReviewId;
+            review.Comment = reviewView.Comment;
+            review.Rating = reviewView.Rating;
+            
+
+
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                return NotFound();
+            }
+
+            return Ok();
+        }
+
+        // Map review to review view
         private static ReviewView reviewViewReturn (Review review) =>
             new ReviewView
             {

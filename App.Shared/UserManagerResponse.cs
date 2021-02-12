@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Text;
 
+
+
 namespace App.Shared
 {
     public class UserManagerResponse
@@ -10,5 +12,6 @@ namespace App.Shared
         public bool IsSuccess { get; set; }
         public IEnumerable<string> Errors { get; set; }
         public DateTime? ExpireDate { get; set; }
+        
     }
 }

@@ -8,12 +8,12 @@ namespace App.Models
     public class Business
     {
         public int BusinessId { get; set; }
-        public string BusinessType { get; set; }
+        public string BusinessType { get; set; } // Business type should be in view
         public string BusinessName { get; set; }
         public int TotalCrowd { get; set; }
         public int CurrentCrowd { get; set; }
-        public int EmergencyAppointment { get; set; }
-        public string Summary { get; set; }
+        public int EmergencyAppointment { get; set; } // How to represent emg appo 
+        public string Summary { get; set; } // summary of business
         public string Address { get; set; } //  small issue
         public DateTime PublishedAt { get; set; }
         public int UserId { get; set; }
