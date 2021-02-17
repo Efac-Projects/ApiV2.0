@@ -29,13 +29,15 @@ namespace App.Service
         private IConfiguration _configuration;
         private IMailService _mailService;
         private RoleManager<IdentityRole> _roleManager;
+        private IJWTService _jwtService;
 
-        public UserService(UserManager<IdentityUser> userManager, IConfiguration configuration, IMailService mailService, RoleManager<IdentityRole> roleManager)
+        public UserService(UserManager<IdentityUser> userManager, IConfiguration configuration, IMailService mailService, RoleManager<IdentityRole> roleManager, IJWTService jwtService)
         {
             _userManger = userManager;
             _configuration = configuration;
             _mailService = mailService;
             _roleManager = roleManager;
+            _jwtService = jwtService;
         }
 
         // Register User
@@ -47,7 +49,7 @@ namespace App.Service
             if (model.Password != model.ConfirmPassword)
                 return new UserManagerResponse
                 {
-                    Message = "Confirm password doesn't match the password",
+                    Token = "Confirm password doesn't match the password",
                     IsSuccess = false,
                 };
 
@@ -66,13 +68,18 @@ namespace App.Service
                 // generate token for verify email address
                 //var confirmEmailToken = await _userManger.GenerateEmailConfirmationTokenAsync(identityUser);
 
-                //var encodedEmailToken = Encoding.UTF8.GetBytes(confirmEmailToken);
-                //var validEmailToken = WebEncoders.Base64UrlEncode(encodedEmailToken);
+                // var encodedEmailToken = Encoding.UTF8.GetBytes(confirmEmailToken);
+                // var validEmailToken = WebEncoders.Base64UrlEncode(encodedEmailToken);
 
-                //string url = $"{_configuration["AppUrl"]}/api/auth/confirmemail?userid={identityUser.Id}&token={validEmailToken}";
+                // string url = $"{_configuration["AppUrl"]}/api/auth/confirmemail?userid={identityUser.Id}&token={validEmailToken}";
 
                 //await _mailService.SendEmailAsync(identityUser.Email, "Confirm your email", $"<h1>Welcome to Auth Demo</h1>" +
                 //  $"<p>Please confirm your email by <a href='{url}'>Clicking here</a></p>");
+
+                // jwt
+
+                string tokenString = await _jwtService.RegisterJWT(model);
+
 
                 if (!await _roleManager.RoleExistsAsync(UserRoles.User))
                 {
@@ -93,14 +100,16 @@ namespace App.Service
 
                 return new UserManagerResponse
                 {
-                    Message = "User created successfully!",
+
+                    Token = tokenString,
                     IsSuccess = true,
+                    
                 };
             }
 
             return new UserManagerResponse
             {
-                Message = "User did not create",
+                Token = "User did not create",
                 IsSuccess = false,
                 Errors = result.Errors.Select(e => e.Description)
             };
@@ -117,7 +126,7 @@ namespace App.Service
             if (model.Password != model.ConfirmPassword)
                 return new UserManagerResponse
                 {
-                    Message = "Confirm password doesn't match the password",
+                    Token = "Confirm password doesn't match the password",
                     IsSuccess = false,
                 };
 
@@ -165,14 +174,14 @@ namespace App.Service
 
                 return new UserManagerResponse
                 {
-                    Message = "Business User created successfully!",
+                    Token = "Business User created successfully!",
                     IsSuccess = true,
                 };
             }
 
             return new UserManagerResponse
             {
-                Message = "User did not create",
+                Token = "User did not create",
                 IsSuccess = false,
                 Errors = result.Errors.Select(e => e.Description)
             };
@@ -190,7 +199,7 @@ namespace App.Service
             if (model.Password != model.ConfirmPassword)
                 return new UserManagerResponse
                 {
-                    Message = "Confirm password doesn't match the password",
+                    Token = "Confirm password doesn't match the password",
                     IsSuccess = false,
                 };
 
@@ -236,14 +245,14 @@ namespace App.Service
 
                 return new UserManagerResponse
                 {
-                    Message = "Admin created successfully!",
+                    Token = "Admin created successfully!",
                     IsSuccess = true,
                 };
             }
 
             return new UserManagerResponse
             {
-                Message = "User did not create",
+                Token = "User did not create",
                 IsSuccess = false,
                 Errors = result.Errors.Select(e => e.Description)
             };
@@ -260,7 +269,7 @@ namespace App.Service
             {
                 return new UserManagerResponse
                 {
-                    Message = "There is no user with that Email address",
+                    Token = "There is no user with that Email address",
                     IsSuccess = false,
                 };
             }
@@ -271,38 +280,18 @@ namespace App.Service
             if (!result)
                 return new UserManagerResponse
                 {
-                    Message = "Invalid password",
+                    Token = "Invalid password",
                     IsSuccess = false,
                 };
 
-            var claims = new List<Claim>
-            {
-                new Claim("Email", model.Email),
-                new Claim(ClaimTypes.NameIdentifier, user.Id),
-            };
-
-            foreach (var userRole in userRoles)
-            {
-                claims.Add(new Claim(ClaimTypes.Role, userRole));
-                Console.WriteLine(userRole.ToString());
-            }
-
-            var key = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(_configuration["AuthSettings:Key"]));
-
-            var token = new JwtSecurityToken(
-                issuer: _configuration["AuthSettings:Issuer"],
-                audience: _configuration["AuthSettings:Audience"],
-                claims: claims,
-                expires: DateTime.Now.AddDays(30),
-                signingCredentials: new SigningCredentials(key, SecurityAlgorithms.HmacSha256));
-
-            string tokenAsString = new JwtSecurityTokenHandler().WriteToken(token);
+            string tokenAsString = await _jwtService.LoginJWT(model);
 
             return new UserManagerResponse
             {
-                Message = tokenAsString,
+                Token = tokenAsString,
                 IsSuccess = true,
-                ExpireDate = token.ValidTo
+                
+               
             };
 
            
@@ -315,7 +304,7 @@ namespace App.Service
                 return new UserManagerResponse
                 {
                     IsSuccess = false,
-                    Message = "User not found"
+                    Token = "User not found"
                 };
 
             var decodedToken = WebEncoders.Base64UrlDecode(token);
@@ -326,14 +315,14 @@ namespace App.Service
             if (result.Succeeded)
                 return new UserManagerResponse
                 {
-                    Message = "Email confirmed successfully!",
+                    Token = "Email confirmed successfully!",
                     IsSuccess = true,
                 };
 
             return new UserManagerResponse
             {
                 IsSuccess = false,
-                Message = "Email did not confirm",
+                Token = "Email did not confirm",
                 Errors = result.Errors.Select(e => e.Description)
             };
         }
