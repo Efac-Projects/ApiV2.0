@@ -62,6 +62,7 @@ namespace App
             });
 
             services.AddScoped<IUserService,UserService>();
+            services.AddScoped<IJWTService, JWTService>();
             services.AddTransient<IMailService, SendGridEmailService>(); // one object for a time
             services.AddControllers();
            

@@ -80,7 +80,7 @@ namespace App.Controllers
         [Authorize(Roles = "Business")]
         public async Task<ActionResult<ServiceView>> CreateService(ServiceView serviceView)
         {
-            var service = new Service
+            var service = new Models.Service
             {
 
                 ServiceId = serviceView.ServiceId,
@@ -90,7 +90,7 @@ namespace App.Controllers
                 IsAvailable = serviceView.IsAvailable
             };
 
-            _context.Businesses.Add(service);
+            _context.Services.Add(service);
             await _context.SaveChangesAsync();
 
             return Ok(service);
