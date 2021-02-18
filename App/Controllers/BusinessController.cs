@@ -61,12 +61,11 @@ namespace App.Controllers
                 return NotFound();
             }
 
-            business.BusinessName = businessView.BusinessName;
+            business.Name = businessView.BusinessName;
             business.TotalCrowd = businessView.TotalCrowd;
             business.CurrentCrowd = businessView.CurrentCrowd;
-            business.Summary = businessView.Summary;
             business.PhoneNumber = businessView.PhoneNumber;
-            business.Address = businessView.Address;
+            
 
 
 
@@ -89,12 +88,11 @@ namespace App.Controllers
             var business = new Business
             {
 
-                BusinessName = businessView.BusinessName,
+                Name = businessView.BusinessName,
                 TotalCrowd = businessView.TotalCrowd,
                 CurrentCrowd = businessView.CurrentCrowd,
-                Summary = businessView.Summary,
                 PhoneNumber = businessView.PhoneNumber,
-                Address = businessView.Address
+                
             };
 
             _context.Businesses.Add(business);
@@ -125,12 +123,12 @@ namespace App.Controllers
             new BusinessView
             {
                 BusinessId = business.BusinessId,
-                BusinessName = business.BusinessName,
+                BusinessName = business.Name,
                 TotalCrowd = business.TotalCrowd,
                 CurrentCrowd = business.CurrentCrowd,
-                Summary = business.Summary,
+                
                 PhoneNumber = business.PhoneNumber,
-                Address = business.Address
+                
             };
 
         private bool businessExists(int id) =>

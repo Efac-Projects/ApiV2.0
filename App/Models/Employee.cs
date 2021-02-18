@@ -13,7 +13,7 @@ namespace App.Models
         public string Email { get; set; }
         public int ServiceId { get; set; }
         public string PhoneNumber { get; set; }
-        public Service Eservice { get; set; }
+       
 
     }
 }
