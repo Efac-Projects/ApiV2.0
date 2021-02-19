@@ -12,10 +12,10 @@ namespace App.Models    // edited now have to change database view
         public string Email { get; set; }
         public int TotalCrowd { get; set; }
         public int CurrentCrowd { get; set; }
-        public int EmergencyAppointment { get; set; } // If this emf appo give priority, like 5 emg app 
+        public int EmergencyAppointment { get; set; } // If this emf appo give priority, like 5 emg app
         public int PhoneNumber { get; set; } // from business sign up
         public int PostalCode { get; set; } // from business sign up
-         public OpeningHours OpeningHours { get; set; }
+        public OpeningHours OpeningHours { get; set; }
         public IList<Appointment> Appointments { get; set; }
         public IList<Treatment> Treatments { get; set; }
 
@@ -98,13 +98,121 @@ namespace App.Models    // edited now have to change database view
         }
 
 
+        public IList<DateTime> GiveAvailableTimesOnDate(DateTime date, IEnumerable<Treatment> treatments)
+        {
+            IList<DateTime> avaiableTimes = new List<DateTime>();
 
-        //------------------------
+            TimeSpan totalDuration = new TimeSpan();
+            foreach (Treatment tr in treatments) totalDuration = totalDuration.Add(tr.Duration);
 
-        // Add method here to check get availble time for the appointment
+            //Time time = OpeningHours.WorkDays.SingleOrDefault(wd => wd.Day == date.DayOfWeek).Hours[0];
 
-        //----------------------- 
+            IList<TimeRange> hours = OpeningHours.WorkDays.SingleOrDefault(wd => wd.Day == date.DayOfWeek).Hours;
 
+            if (hours.Count < 1)
+                return avaiableTimes;
+
+            foreach (TimeRange hour in hours)
+            {
+                DateTime closingHour = GiveDateTime(hour.EndTime, date);
+                DateTime startTime = GiveDateTime(hour.StartTime, date);
+                DateTime endTime = startTime.Add(totalDuration);
+
+
+                while (endTime <= closingHour)
+                {
+                    if (!OverlappingWithAppointment(startTime, endTime))
+                        avaiableTimes.Add(startTime);
+
+                    startTime = startTime.Add(_maxTimeBetweenAppointments);
+                    endTime = startTime.Add(totalDuration);
+                }
+            }
+
+            return avaiableTimes;
+        }
+
+        public void ChangeWorkDays(int dayId, List<TimeRange> hours)
+        {
+            DayOfWeek day = (DayOfWeek)(dayId);
+            this.OpeningHours.EditHoursOfDay(day, hours);
+        }
+
+        //private bool NotInOpeningHours2(Appointment appointment)
+        //{
+        //    IList<DateTime> openingHours = new List<DateTime>();
+        //    IList<Time> workDay = OpeningHours.WorkDays.Single(wd => wd.Day == appointment.StartMoment.DayOfWeek).Hours;
+        //    IList<bool> flags = new List<bool>();
+
+        //    if (workDay.Count < 1)
+        //        return true;
+
+        //    for (int i = 0; i < workDay.Count; i++)
+        //    {
+        //        openingHours.Add(new DateTime(appointment.StartMoment.Year, appointment.StartMoment.Month, appointment.StartMoment.Day, workDay[i].Hour, workDay[i].Minute, workDay[i].Second));
+        //    }
+
+        //    for (int i = 0; i < openingHours.Count; i++)
+        //    {
+        //        if (i % 2 != 0)
+        //            continue;
+
+        //        if (appointment.StartMoment <= openingHours[i] && appointment.EndMoment <= openingHours[i + 1])
+        //            flags.Add(true);
+        //        else
+        //            flags.Add(false);
+        //    }
+
+        //    return (!flags.Contains(true));
+        //}
+
+        private bool NotInOpeningHours(Appointment appointment)
+        {
+            IList<bool> flags = new List<bool>();
+            IList<TimeRange> workDay = OpeningHours.WorkDays.Single(wd => wd.Day == appointment.StartMoment.DayOfWeek).Hours;
+
+            if (workDay.Count < 1)
+                return true;
+
+            foreach (TimeRange period in workDay)
+            {
+                if (appointment.StartMoment >= GiveDateTime(period.StartTime, appointment.StartMoment) && appointment.EndMoment <= GiveDateTime(period.EndTime, appointment.EndMoment))
+                    flags.Add(true);
+                else
+                    flags.Add(false);
+            }
+
+            return (!flags.Contains(true));
+        }
+
+        private DateTime GiveDateTime(Time time, DateTime date)
+        {
+            return new DateTime(date.Year, date.Month, date.Day, time.Hour, time.Minute, time.Second);
+        }
+
+        //private bool OverlappingWithAppointment(Appointment appointment)
+        //{
+        //    foreach (Appointment a in Appointments)
+        //    {
+        //        if (!(appointment.StartMoment <= a.EndMoment && appointment.EndMoment <= a.StartMoment))
+        //            if (!(appointment.StartMoment >= a.EndMoment && appointment.EndMoment >= a.StartMoment))
+        //                return true;
+        //    }
+
+        //    return false;
+        //}
+
+        private bool OverlappingWithAppointment(DateTime startMoment, DateTime endMoment)
+        {
+            foreach (Appointment a in Appointments)
+            {
+                if (!(startMoment <= a.EndMoment && endMoment <= a.StartMoment))
+                    if (!(startMoment >= a.EndMoment && endMoment >= a.StartMoment))
+                        return true;
+            } 
+
+            return false;
+        }
 
     }
 }
