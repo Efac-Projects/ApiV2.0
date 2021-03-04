@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace App.Models
 {
-    interface IBusinessRepository
+    public interface IBusinessRepository
     {
         Business GetBy(int id);
         Business GetByEmail(string email);

@@ -7,16 +7,16 @@ using System.Threading.Tasks;
 
 namespace App.ViewModel
 {
-    public class AppointmentView
+    public class TreatmentView
     {
-        public int AppointmentId { get; set; }
+        public int Id { get; set; }
         [Required]
-        public string Firstname { get; set; }
+        public string Name { get; set; }
         [Required]
-        public string Lastname { get; set; }
+        public TimeSpanView Duration { get; set; }
         [Required]
-        public DateTime StartMoment { get; set; }
+        public TreatmentCategory Category { get; set; }
         [Required]
-        public Treatment Treatments { get; set; }
+        public double Price { get; set; }
     }
 }

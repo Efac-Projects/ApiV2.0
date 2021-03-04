@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace App.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20210125093709_Change model classes")]
-    partial class Changemodelclasses
+    [Migration("20210303134125_New test")]
+    partial class Newtest
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -28,36 +28,26 @@ namespace App.Migrations
                         .HasColumnType("int")
                         .UseIdentityColumn();
 
-                    b.Property<bool>("Approved")
-                        .HasColumnType("bit");
-
                     b.Property<int?>("BusinessId")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("CreatedAt")
+                    b.Property<string>("FirstName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("LastName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("StartMoment")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime>("EndDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("Price")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("StartDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("Total")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("UpdatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("UserId")
+                    b.Property<int?>("ThreatmentTreatmentId")
                         .HasColumnType("int");
 
                     b.HasKey("AppointmentId");
 
                     b.HasIndex("BusinessId");
+
+                    b.HasIndex("ThreatmentTreatmentId");
 
                     b.ToTable("Appointments");
                 });
@@ -69,23 +59,26 @@ namespace App.Migrations
                         .HasColumnType("int")
                         .UseIdentityColumn();
 
-                    b.Property<string>("Address")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("BusinessName")
+                    b.Property<string>("BannerPath")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("BusinessType")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("CardImagePath")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("CurrentCrowd")
                         .HasColumnType("int");
 
-                    b.Property<int>("EmergencyAppointment")
-                        .HasColumnType("int");
+                    b.Property<string>("Email")
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<bool>("IsApproved")
-                        .HasColumnType("bit");
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("OpeningHoursId")
+                        .HasColumnType("int");
 
                     b.Property<int>("PhoneNumber")
                         .HasColumnType("int");
@@ -93,54 +86,29 @@ namespace App.Migrations
                     b.Property<int>("PostalCode")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("PublishedAt")
-                        .HasColumnType("datetime2");
-
                     b.Property<string>("Summary")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("TotalCrowd")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("UpdatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
                     b.HasKey("BusinessId");
+
+                    b.HasIndex("OpeningHoursId");
 
                     b.ToTable("Businesses");
                 });
 
-            modelBuilder.Entity("App.Models.Employee", b =>
+            modelBuilder.Entity("App.Models.OpeningHour", b =>
                 {
-                    b.Property<int>("EmployeeId")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .UseIdentityColumn();
 
-                    b.Property<string>("Email")
-                        .HasColumnType("nvarchar(max)");
+                    b.HasKey("Id");
 
-                    b.Property<string>("FirstName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("LastName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("PhoneNumber")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("ServiceId")
-                        .HasColumnType("int");
-
-                    b.HasKey("EmployeeId");
-
-                    b.HasIndex("ServiceId")
-                        .IsUnique();
-
-                    b.ToTable("Employees");
+                    b.ToTable("OpeningHours");
                 });
 
             modelBuilder.Entity("App.Models.Review", b =>
@@ -161,15 +129,60 @@ namespace App.Migrations
 
                     b.HasKey("ReviewId");
 
-                    b.HasIndex("AppointmentId")
-                        .IsUnique();
-
                     b.ToTable("Reviews");
                 });
 
-            modelBuilder.Entity("App.Models.Service", b =>
+            modelBuilder.Entity("App.Models.Time", b =>
                 {
-                    b.Property<int>("ServiceId")
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .UseIdentityColumn();
+
+                    b.Property<int>("Hour")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Minute")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Second")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Time");
+                });
+
+            modelBuilder.Entity("App.Models.TimeRange", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .UseIdentityColumn();
+
+                    b.Property<int?>("EndTimeId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("StartTimeId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("WorkDayId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("EndTimeId");
+
+                    b.HasIndex("StartTimeId");
+
+                    b.HasIndex("WorkDayId");
+
+                    b.ToTable("TimeRange");
+                });
+
+            modelBuilder.Entity("App.Models.Treatment", b =>
+                {
+                    b.Property<int>("TreatmentId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .UseIdentityColumn();
@@ -177,29 +190,43 @@ namespace App.Migrations
                     b.Property<int?>("BusinessId")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("EndTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("IsAvailable")
-                        .HasColumnType("bit");
-
-                    b.Property<int>("ServiceName")
+                    b.Property<int>("Category")
                         .HasColumnType("int");
 
-                    b.Property<string>("ServiceOwner")
+                    b.Property<TimeSpan>("Duration")
+                        .HasColumnType("time");
+
+                    b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("StartTime")
-                        .HasColumnType("datetime2");
+                    b.Property<double>("Price")
+                        .HasColumnType("float");
 
-                    b.Property<string>("Summary")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("ServiceId");
+                    b.HasKey("TreatmentId");
 
                     b.HasIndex("BusinessId");
 
-                    b.ToTable("Services");
+                    b.ToTable("Treatments");
+                });
+
+            modelBuilder.Entity("App.Models.WorkDay", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .UseIdentityColumn();
+
+                    b.Property<int>("Day")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("OpeningHourId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("OpeningHourId");
+
+                    b.ToTable("WorkDays");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -403,33 +430,54 @@ namespace App.Migrations
                     b.HasOne("App.Models.Business", null)
                         .WithMany("Appointments")
                         .HasForeignKey("BusinessId");
+
+                    b.HasOne("App.Models.Treatment", "Threatment")
+                        .WithMany("appointments")
+                        .HasForeignKey("ThreatmentTreatmentId");
+
+                    b.Navigation("Threatment");
                 });
 
-            modelBuilder.Entity("App.Models.Employee", b =>
+            modelBuilder.Entity("App.Models.Business", b =>
                 {
-                    b.HasOne("App.Models.Service", "Eservice")
-                        .WithOne("Employe")
-                        .HasForeignKey("App.Models.Employee", "ServiceId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.HasOne("App.Models.OpeningHour", "OpeningHours")
+                        .WithMany()
+                        .HasForeignKey("OpeningHoursId");
 
-                    b.Navigation("Eservice");
+                    b.Navigation("OpeningHours");
                 });
 
-            modelBuilder.Entity("App.Models.Review", b =>
+            modelBuilder.Entity("App.Models.TimeRange", b =>
                 {
-                    b.HasOne("App.Models.Appointment", null)
-                        .WithOne("Review")
-                        .HasForeignKey("App.Models.Review", "AppointmentId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.HasOne("App.Models.Time", "EndTime")
+                        .WithMany()
+                        .HasForeignKey("EndTimeId");
+
+                    b.HasOne("App.Models.Time", "StartTime")
+                        .WithMany()
+                        .HasForeignKey("StartTimeId");
+
+                    b.HasOne("App.Models.WorkDay", null)
+                        .WithMany("Hours")
+                        .HasForeignKey("WorkDayId");
+
+                    b.Navigation("EndTime");
+
+                    b.Navigation("StartTime");
                 });
 
-            modelBuilder.Entity("App.Models.Service", b =>
+            modelBuilder.Entity("App.Models.Treatment", b =>
                 {
                     b.HasOne("App.Models.Business", null)
-                        .WithMany("Services")
+                        .WithMany("Treatments")
                         .HasForeignKey("BusinessId");
+                });
+
+            modelBuilder.Entity("App.Models.WorkDay", b =>
+                {
+                    b.HasOne("App.Models.OpeningHour", null)
+                        .WithMany("WorkDays")
+                        .HasForeignKey("OpeningHourId");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -483,21 +531,26 @@ namespace App.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("App.Models.Appointment", b =>
-                {
-                    b.Navigation("Review");
-                });
-
             modelBuilder.Entity("App.Models.Business", b =>
                 {
                     b.Navigation("Appointments");
 
-                    b.Navigation("Services");
+                    b.Navigation("Treatments");
                 });
 
-            modelBuilder.Entity("App.Models.Service", b =>
+            modelBuilder.Entity("App.Models.OpeningHour", b =>
                 {
-                    b.Navigation("Employe");
+                    b.Navigation("WorkDays");
+                });
+
+            modelBuilder.Entity("App.Models.Treatment", b =>
+                {
+                    b.Navigation("appointments");
+                });
+
+            modelBuilder.Entity("App.Models.WorkDay", b =>
+                {
+                    b.Navigation("Hours");
                 });
 #pragma warning restore 612, 618
         }

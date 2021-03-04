@@ -13,12 +13,16 @@ namespace AspNetIdentityDemo.Api.Models
 
         public ApplicationDbContext(DbContextOptions options) : base(options)
         {
-            
+
         }
 
-        public DbSet<Employee> Employees { get; set; }
+       
         public DbSet<Business> Businesses { get; set; }
         public DbSet<Appointment> Appointments { get; set; }
         public DbSet<Review> Reviews { get; set; }
+        public DbSet<Treatment> Treatments { get; set; }
+        public DbSet<OpeningHour> OpeningHours { get; set; }
+        public DbSet<WorkDay> WorkDays { get; set; }
+
     }
 }

@@ -1,137 +1,132 @@
-﻿using App.Models;
+﻿using App.HubConfig;
+using App.Models;
 using App.ViewModel;
-using AspNetIdentityDemo.Api.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.SignalR;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace App.Controllers
 {
-    
+    [ApiConventionType(typeof(DefaultApiConventions))]
+    [Produces("application/json")]
     [Route("api/[controller]")]
     [ApiController]
     public class BusinessController : ControllerBase
     {
-        private readonly ApplicationDbContext _context;
+        private IBusinessRepository _businessRepository;
+        private IHubContext<AppointmentHub> _hub;
 
-        public BusinessController(ApplicationDbContext context)
+        public BusinessController(IBusinessRepository repo)
         {
-            _context = context;
+            _businessRepository = repo;
+
         }
 
+        #region Businesses
         // GET: api/Business
+
         [HttpGet]
-        [Authorize(Roles = "Admin")]
-        public async Task<ActionResult<IEnumerable<BusinessView>>> GetAllBusiness()
+        public ActionResult<IEnumerable<Business>> GetBusinesses(string name = null)
         {
-            return await _context.Businesses.
-                Select(x => businessViewReturn(x)
-                ).ToListAsync();
+            if (string.IsNullOrEmpty(name))
+                return Ok(_businessRepository.GetAll());
+            else return Ok(_businessRepository.GetBy(name));
         }
+
+        // GET: api/Business/1
 
         [HttpGet("{id}")]
-       
-        public async Task<ActionResult<IEnumerable<BusinessView>>> GetBusinessbyId(int id)
+        public ActionResult<Business> GetBusiness(int id)
         {
-            var business = await _context.Businesses.FindAsync(id);
+            Business business = _businessRepository.GetBy(id);
 
             if (business == null)
-            {
                 return NotFound();
-            }
 
             return Ok(business);
         }
 
-        [HttpPut("{id}")]
-        [Authorize(Roles = "Admin,Business")]
-        public async Task<IActionResult> UpdateBusiness(int id, BusinessView businessView)
+
+        [Authorize]
+        [HttpGet("loggedInUser")]
+        public ActionResult<Business> GetBusinessWithoutId()
         {
-            // if (id != businessView.BusinessId)
-            // {
-            // return BadRequest();
-            // }
+            Business business = _businessRepository.GetByEmail(User.Identity.Name);
 
-            var business = await _context.Businesses.FindAsync(id);
             if (business == null)
-            {
                 return NotFound();
-            }
 
-            business.Name = businessView.BusinessName;
-            business.TotalCrowd = businessView.TotalCrowd;
-            business.CurrentCrowd = businessView.CurrentCrowd;
-            business.PhoneNumber = businessView.PhoneNumber;
-            
-
-
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                return NotFound();
-            }
-
-            return Ok();
+            return Ok(business);
         }
 
-        [HttpPost]
-        [Authorize(Roles = "Business")]
-        public async Task<ActionResult<BusinessView>> CreateBusiness(BusinessView businessView)
+        [HttpPut("Business")]
+        public ActionResult<Business> PutBusiness(Business business)
         {
+            Business business2 = _businessRepository.GetByEmail(User.Identity.Name);
+
+            if (business == null)
+                return NotFound();
+
+            if (business.BusinessId != business2.BusinessId)
+                return BadRequest();
+
+            business2.Name = business.Name;
+
+            _businessRepository.Update(business2);
+            _businessRepository.SaveChanges();
+
+            return Ok(business2);
+        }
+
+
+        /// Deletes the logged in business
+
+        [HttpDelete("Business/{id}")]
+        public IActionResult DeleteBusiness()
+        {
+            Business business = _businessRepository.GetByEmail(User.Identity.Name);
+
+            if (business == null)
+                return NotFound();
+
+            _businessRepository.Delete(business);
+            _businessRepository.SaveChanges();
+
+            return NoContent();
+        }
+
+        // Create Business
+        [HttpPost]
+        public ActionResult<Business> CreateBusiness(BusinessView businessView)
+        {
+
             var business = new Business
             {
 
-                Name = businessView.BusinessName,
+                Name = businessView.Name,
+                Email = businessView.Email,
                 TotalCrowd = businessView.TotalCrowd,
                 CurrentCrowd = businessView.CurrentCrowd,
                 PhoneNumber = businessView.PhoneNumber,
-                
+                BusinessType = businessView.BusinessType,
+                Summary = businessView.Summary,
+                PostalCode = businessView.PostalCode
+
+
             };
 
-            _context.Businesses.Add(business);
-            await _context.SaveChangesAsync();
+            _businessRepository.Add(business);
+            _businessRepository.SaveChanges();
 
             return Ok(business);
-
         }
 
-        // delete method also should be here, sometime not be usefull for this particular case
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteBusiness(int id)
-        {
-            var business = await _context.Businesses.FindAsync(id);
+        #endregion
 
-            if (business == null)
-            {
-                return NotFound();
-            }
 
-            _context.Businesses.Remove(business);
-            await _context.SaveChangesAsync();
-
-            return Ok();
-        }
-
-        private static BusinessView businessViewReturn(Business business) =>
-            new BusinessView
-            {
-                BusinessId = business.BusinessId,
-                BusinessName = business.Name,
-                TotalCrowd = business.TotalCrowd,
-                CurrentCrowd = business.CurrentCrowd,
-                
-                PhoneNumber = business.PhoneNumber,
-                
-            };
-
-        private bool businessExists(int id) =>
-            _context.Businesses.Any(e => e.BusinessId == id);
     }
 }

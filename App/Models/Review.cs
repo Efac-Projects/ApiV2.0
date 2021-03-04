@@ -8,7 +8,7 @@ namespace App.Models
 {
     public class Review
     {
-      
+
         public int ReviewId { get; set; }
         public string Comment { get; set; }
         public int AppointmentId { get; set; }

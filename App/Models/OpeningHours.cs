@@ -5,12 +5,12 @@ using System.Threading.Tasks;
 
 namespace App.Models
 {
-    public class OpeningHours
+    public class OpeningHour
     {
         public int Id { get; set; }
-        public IList<WorkDay> WorkDays { get; set; }
+        public IList<WorkDay> WorkDays { get; set; } // each day of week and opening hour 
 
-        public OpeningHours()
+        public OpeningHour()
         {
             WorkDays = new List<WorkDay>();
             //FillHours();
