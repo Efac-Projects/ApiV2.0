@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using App.Models;
+using App.Repositories;
 using App.Service;
 using AspNetIdentityDemo.Api.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -61,11 +63,12 @@ namespace App
                 };
             });
 
+            services.AddScoped<IBusinessRepository, BusinessRepository>();
             services.AddScoped<IUserService,UserService>();
             services.AddScoped<IJWTService, JWTService>();
             services.AddTransient<IMailService, SendGridEmailService>(); // one object for a time
-            services.AddControllers();
-           
+            services.AddControllers().AddNewtonsoftJson();
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

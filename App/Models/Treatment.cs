@@ -21,6 +21,8 @@ namespace App.Models
         public TreatmentCategory Category { get; set; }
         public double Price { get; set; }
 
+        public List<Appointment> appointments { get; set; }
+
         protected Treatment() { }
 
         public Treatment(string name, TimeSpan duration, TreatmentCategory category, double price)
