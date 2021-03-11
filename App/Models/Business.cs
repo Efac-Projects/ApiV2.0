@@ -1,6 +1,8 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Http;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -26,9 +28,14 @@ namespace App.Models    // edited now have to change database view
         public IList<Treatment> Treatments { get; set; }
 
         private TimeSpan _maxTimeBetweenAppointments = new TimeSpan(0, 15, 0);
+        public string ImageName { get; set; }
 
-        public string BannerPath { get; set; }
-        public string CardImagePath { get; set; }
+        [NotMapped]
+        public IFormFile ImageFile { get; set; }
+
+        [NotMapped]
+        public string ImageSrc { get; set; }
+
 
 
         public Business() { }

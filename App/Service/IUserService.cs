@@ -1,5 +1,6 @@
 ﻿using App.Controllers;
 using App.Shared;
+using App.ViewModel;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Configuration;
@@ -21,6 +22,9 @@ namespace App.Service
         Task<UserManagerResponse> RegisterBusinessAsync(RegisterViewModel model);
         Task<UserManagerResponse> LoginUserAsync(LoginViewModel model);
         Task<UserManagerResponse> ConfirmEmailAsync(string userId, string token);
+        Task<IdentityUser> GetUserbyId(string userId);
+
+
     }
 
     public class UserService : IUserService
@@ -300,6 +304,7 @@ namespace App.Service
         public async Task<UserManagerResponse> ConfirmEmailAsync(string userId, string token) {
           
             var user = await _userManger.FindByIdAsync(userId);
+            
             if (user == null)
                 return new UserManagerResponse
                 {
@@ -326,6 +331,16 @@ namespace App.Service
                 Errors = result.Errors.Select(e => e.Description)
             };
         }
+
+        // get user by id
+        public async Task<IdentityUser> GetUserbyId(string userId)
+        {
+            var user = await _userManger.FindByIdAsync(userId);
+            return user;
+            }
+
+        
     }
-}
+ }
+
 

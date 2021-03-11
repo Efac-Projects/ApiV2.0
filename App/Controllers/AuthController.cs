@@ -1,5 +1,6 @@
 ﻿using App.Service;
 using App.Shared;
+using App.ViewModel;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using System;
@@ -115,6 +116,22 @@ namespace App.Controllers
             }
 
             return BadRequest(result);
-        } 
+        }
+
+        // get user
+        [HttpGet("user/{id}")]
+        public async  Task<IActionResult> GetUser(string id) {
+            var user = await _userService.GetUserbyId(id);
+
+            if (user == null) {
+                return NotFound();
+            }
+            return Ok(new UserView { 
+            UserID=user.Id,
+            Email = user.Email,
+            UserName = user.UserName
+            });
+
+        }
     }
 }
