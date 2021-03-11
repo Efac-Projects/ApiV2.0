@@ -2,10 +2,13 @@
 using App.Models;
 using App.ViewModel;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -18,11 +21,13 @@ namespace App.Controllers
     public class BusinessController : ControllerBase
     {
         private IBusinessRepository _businessRepository;
+        private IWebHostEnvironment _hostEnvironment;
         private IHubContext<AppointmentHub> _hub;
 
-        public BusinessController(IBusinessRepository repo)
+        public BusinessController(IBusinessRepository repo, IWebHostEnvironment hostEnvironment)
         {
             _businessRepository = repo;
+            this._hostEnvironment = hostEnvironment;
 
         }
 
@@ -101,23 +106,24 @@ namespace App.Controllers
 
         // Create Business
         [HttpPost]
-        public ActionResult<Business> CreateBusiness(BusinessView businessView)
+        public ActionResult<Business> CreateBusiness([FromForm]BusinessView businessView)
         {
+            
 
             var business = new Business
             {
 
-                Name = businessView.Name,
+                Name = businessView.BusinessName,
                 Email = businessView.Email,
                 TotalCrowd = businessView.TotalCrowd,
                 CurrentCrowd = businessView.CurrentCrowd,
                 PhoneNumber = businessView.PhoneNumber,
                 BusinessType = businessView.BusinessType,
                 Summary = businessView.Summary,
-                PostalCode = businessView.PostalCode
+                PostalCode = businessView.PostalCode,
+              //  ImageName = SaveImage(businessView.ImageFile)
 
-
-            };
+        };
 
             _businessRepository.Add(business);
             _businessRepository.SaveChanges();
@@ -125,6 +131,27 @@ namespace App.Controllers
             return Ok(business);
         }
 
+        // Upload Image
+        public string SaveImage(IFormFile imageFile)
+        {
+            string imageName = new String(Path.GetFileNameWithoutExtension(imageFile.FileName).Take(10).ToArray()).Replace(' ', '-');
+            imageName = imageName + DateTime.Now.ToString("yymmssfff") + Path.GetExtension(imageFile.FileName);
+            var imagePath = Path.Combine(_hostEnvironment.ContentRootPath, "Images", imageName);
+            using (var fileStream = new FileStream(imagePath, FileMode.Create))
+            {
+                 imageFile.CopyToAsync(fileStream);
+            }
+            return imageName;
+        }
+
+        // Delete Image
+        [NonAction]
+        public void DeleteImage(string imageName)
+        {
+            var imagePath = Path.Combine(_hostEnvironment.ContentRootPath, "Images", imageName);
+            if (System.IO.File.Exists(imagePath))
+                System.IO.File.Delete(imagePath);
+        }
         #endregion
 
 

@@ -27,5 +27,9 @@
     <ProjectReference Include="..\App.Shared\App.Shared.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Images\" />
+  </ItemGroup>
+
 
 </Project>
