@@ -39,12 +39,13 @@ namespace App.Service
                 new Claim("Id", user.Id),
                 new Claim("Name", user.UserName),
                 new Claim("Email", model.Email),
-                new Claim(ClaimTypes.NameIdentifier, user.Id),
+                
+               // new Claim(ClaimTypes.NameIdentifier, user.Id),
             };
 
             foreach (var userRole in userRoles)
             {
-                claims.Add(new Claim(ClaimTypes.Role, userRole));
+                claims.Add(new Claim("Role", userRole));
                 Console.WriteLine(userRole.ToString());
             }
 
