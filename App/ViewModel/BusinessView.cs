@@ -19,6 +19,7 @@ namespace App.ViewModel
         public string BusinessType { get; set; }
         public string Summary { get; set; }
        
+
         public IList<Treatment> Treatments { get; set; }
         public WorkDayView2 WorkDays { get; set; }
     }

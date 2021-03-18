@@ -1,8 +1,10 @@
 ﻿using App.Controllers;
 using App.Shared;
 using App.ViewModel;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.WebUtilities;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System;
@@ -12,6 +14,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+
 
 namespace App.Service
 {
@@ -23,6 +26,9 @@ namespace App.Service
         Task<UserManagerResponse> LoginUserAsync(LoginViewModel model);
         Task<UserManagerResponse> ConfirmEmailAsync(string userId, string token);
         Task<IdentityUser> GetUserbyId(string userId);
+
+        Task<List<IdentityUser>> GetAllUsers(); 
+
 
 
     }
@@ -58,6 +64,7 @@ namespace App.Service
                 };
 
             var FullName = model.UserName;
+            
 
             var identityUser = new IdentityUser
             {
@@ -66,6 +73,9 @@ namespace App.Service
         };
 
             var result = await _userManger.CreateAsync(identityUser, model.Password);
+
+            
+
 
             if (result.Succeeded)
             {
@@ -339,7 +349,11 @@ namespace App.Service
             return user;
             }
 
-        
+        public async Task<List<IdentityUser>> GetAllUsers()
+        {
+            var user = await _userManger.Users.ToListAsync();
+            return user;
+        }
     }
  }
 

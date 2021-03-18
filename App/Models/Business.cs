@@ -11,6 +11,8 @@ namespace App.Models    // edited now have to change database view
     public class Business
     {
         public int BusinessId { get; set; }
+
+       
         public string Name { get; set; }
         public string Email { get; set; }
         public int TotalCrowd { get; set; }
@@ -35,6 +37,8 @@ namespace App.Models    // edited now have to change database view
 
         [NotMapped]
         public string ImageSrc { get; set; }
+
+        public String UserId { get; set; }
 
 
 

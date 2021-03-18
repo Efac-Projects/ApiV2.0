@@ -18,9 +18,13 @@ namespace App.Repositories
             _context = context;
             _businesses = context.Businesses;
         }
+        
+        // get user ID of business user
         public void Add(Business business)
         {
             _businesses.Add(business);
+            
+            
         }
 
         public void Delete(Business business)

@@ -72,8 +72,11 @@ namespace App.Service
 
             var claims = new List<Claim>
             {
+                new Claim("Id", user.Id),
+                new Claim("Name", user.UserName),
                 new Claim("Email", model.Email),
-                new Claim(ClaimTypes.NameIdentifier, user.Id),
+                
+               // new Claim(ClaimTypes.NameIdentifier, user.Id),
             };
 
             foreach (var userRole in userRoles)

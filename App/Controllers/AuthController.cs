@@ -1,6 +1,7 @@
 ﻿using App.Service;
 using App.Shared;
 using App.ViewModel;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using System;
@@ -26,7 +27,7 @@ namespace App.Controllers
             _configuration = configuration;
         }
 
-       
+
         // /api/auth/register (register user)
         [HttpPost("Register")]
         public async Task<IActionResult> RegisterAsync([FromBody] RegisterViewModel model)
@@ -53,6 +54,8 @@ namespace App.Controllers
             {
                 var result = await _userService.RegisterAdminAsync(model);
 
+                
+
                 if (result.IsSuccess)
                     return Ok(result); // Status Code: 200 
 
@@ -62,7 +65,7 @@ namespace App.Controllers
             return BadRequest("Some properties are not valid"); // Status code: 400
         }
 
-        // /api/auth/register (register Business User)
+        // /api/auth/register-business (register Business User)
         [HttpPost()]
         [Route("register-business")]
         public async Task<IActionResult> BusinessRegisterAsync([FromBody] RegisterViewModel model)
@@ -90,7 +93,7 @@ namespace App.Controllers
 
                 if (result.IsSuccess)
                 {
-                   // await _mailService.SendEmailAsync(model.Email, "New login", "<h1>Hey!, new login to your account noticed</h1><p>New login to your account at " + DateTime.Now + "</p>");
+                    // await _mailService.SendEmailAsync(model.Email, "New login", "<h1>Hey!, new login to your account noticed</h1><p>New login to your account at " + DateTime.Now + "</p>");
                     return Ok(result);
                 }
 
@@ -120,18 +123,50 @@ namespace App.Controllers
 
         // get user
         [HttpGet("user/{id}")]
-        public async  Task<IActionResult> GetUser(string id) {
+        public async Task<IActionResult> GetUser(string id) {
             var user = await _userService.GetUserbyId(id);
 
             if (user == null) {
                 return NotFound();
             }
-            return Ok(new UserView { 
-            UserID=user.Id,
-            Email = user.Email,
-            UserName = user.UserName
+            return Ok(new UserView {
+                UserID = user.Id,
+                Email = user.Email,
+                UserName = user.UserName
             });
 
         }
+
+        // get all users
+        //api/auth/users
+        [HttpGet("users")]
+        //[Authorize(Policy = UserRoles.Admin)]
+        public async Task<IActionResult> GetAllUsers() {
+            var users = await _userService.GetAllUsers();
+
+            List<UserView> Alluser = new List<UserView>();
+
+            // retuen all users with these attributes
+            foreach (var user in users)
+            {
+                UserView member = new UserView {
+                    UserID=user.Id,
+                    Email = user.Email,
+                    UserName = user.UserName
+                };
+
+                Alluser.Add(member);
+            }
+
+            if (Alluser == null)
+            {
+                return NotFound();
+            }
+            return Ok(Alluser);
+
+        }
+
+
+
     }
 }
