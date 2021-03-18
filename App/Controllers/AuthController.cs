@@ -2,11 +2,13 @@
 using App.Shared;
 using App.ViewModel;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace App.Controllers
@@ -19,12 +21,17 @@ namespace App.Controllers
         private IUserService _userService;
         private IMailService _mailService;
         private IConfiguration _configuration;
+        
+        
 
         public AuthController(IUserService userService, IMailService mailService, IConfiguration configuration)
         {
             _userService = userService;
             _mailService = mailService;
             _configuration = configuration;
+           
+            
+           
         }
 
 
@@ -125,15 +132,21 @@ namespace App.Controllers
         [HttpGet("user/{id}")]
         public async Task<IActionResult> GetUser(string id) {
             var user = await _userService.GetUserbyId(id);
+            
+
+
+
 
             if (user == null) {
                 return NotFound();
             }
-            return Ok(new UserView {
+            return Ok(new UserView
+            {
                 UserID = user.Id,
                 Email = user.Email,
-                UserName = user.UserName
-            });
+                UserName = user.UserName,
+                
+        }) ; 
 
         }
 

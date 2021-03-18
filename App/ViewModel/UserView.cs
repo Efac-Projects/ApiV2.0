@@ -10,5 +10,6 @@ namespace App.ViewModel
         public String UserID;
         public String Email;
         public String UserName;
+        public String UserRole;
     }
 }

@@ -38,7 +38,7 @@ namespace App.Models    // edited now have to change database view
         [NotMapped]
         public string ImageSrc { get; set; }
 
-        public String UserId { get; set; }
+        
 
 
 
