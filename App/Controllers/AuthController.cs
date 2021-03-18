@@ -21,14 +21,14 @@ namespace App.Controllers
         private IUserService _userService;
         private IMailService _mailService;
         private IConfiguration _configuration;
-        
-        
+        private  UserManager<IdentityUser> _userManager;
 
-        public AuthController(IUserService userService, IMailService mailService, IConfiguration configuration)
+        public AuthController(IUserService userService, IMailService mailService, IConfiguration configuration, UserManager<IdentityUser> userManager)
         {
             _userService = userService;
             _mailService = mailService;
             _configuration = configuration;
+            _userManager = userManager;
            
             
            
@@ -132,7 +132,9 @@ namespace App.Controllers
         [HttpGet("user/{id}")]
         public async Task<IActionResult> GetUser(string id) {
             var user = await _userService.GetUserbyId(id);
-            
+            var role = await _userManager.GetRolesAsync(user);
+            var rolename = role.FirstOrDefault<String>();
+
 
 
 
@@ -145,6 +147,7 @@ namespace App.Controllers
                 UserID = user.Id,
                 Email = user.Email,
                 UserName = user.UserName,
+                UserRole = rolename
                 
         }) ; 
 
@@ -162,10 +165,14 @@ namespace App.Controllers
             // retuen all users with these attributes
             foreach (var user in users)
             {
+                var role = await _userManager.GetRolesAsync(user);
+                var rolename = role.FirstOrDefault<String>();
+
                 UserView member = new UserView {
                     UserID=user.Id,
                     Email = user.Email,
-                    UserName = user.UserName
+                    UserName = user.UserName,
+                    UserRole = rolename
                 };
 
                 Alluser.Add(member);
