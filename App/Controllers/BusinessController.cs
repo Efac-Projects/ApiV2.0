@@ -26,7 +26,7 @@ namespace App.Controllers
         private IBusinessRepository _businessRepository;
         private IWebHostEnvironment _hostEnvironment;
         private UserManager<IdentityUser> _userManager;
-        private IHubContext<AppointmentHub> _hub;
+        //private IHubContext<AppointmentHub> _hub;
 
         public BusinessController(IBusinessRepository repo, IWebHostEnvironment hostEnvironment, UserManager<IdentityUser> userManager)
         {
@@ -61,7 +61,7 @@ namespace App.Controllers
             return Ok(business);
         }
 
-
+        // get business without ids
         //api/business/email/{your email}
         [HttpGet("email/{email}")]
         public ActionResult<Business> GetBusinessWithoutId(string email)
@@ -73,25 +73,33 @@ namespace App.Controllers
 
             return Ok(business);
         }
-
-        [HttpPut("Business")]
-        public ActionResult<Business> PutBusiness(Business business)
+        
+        //api/business/update/{email}
+        [HttpPut("update/{email}")]
+        public ActionResult<Business> PutBusiness(String email,BusinessView businessView)
         {
            
-            Business business2 = _businessRepository.GetByEmail(User.Identity.Name);
+            var business = _businessRepository.GetByEmail(email);
 
             if (business == null)
                 return NotFound();
 
-            if (business.BusinessId != business2.BusinessId)
-                return BadRequest();
+           // if (business.BusinessId != business2.BusinessId)
+              //  return BadRequest();
 
-            business2.Name = business.Name;
+            business.Name = businessView.BusinessName;
+            business.TotalCrowd = businessView.TotalCrowd;
+            business.CurrentCrowd = businessView.CurrentCrowd;
+            business.PhoneNumber = businessView.PhoneNumber;
+            business.PostalCode = businessView.PostalCode;
+            business.Email = businessView.Email;  // user can not change email address 
+            business.BusinessType = businessView.BusinessType;
+            business.Summary = businessView.Summary;
 
-            _businessRepository.Update(business2);
+            _businessRepository.Update(business);
             _businessRepository.SaveChanges();
 
-            return Ok(business2);
+            return Ok(business);
         }
 
 
