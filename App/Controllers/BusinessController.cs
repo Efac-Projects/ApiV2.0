@@ -11,6 +11,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
+using System.Security.Claims;
+using App.Extension;
 
 namespace App.Controllers
 {
@@ -22,19 +25,22 @@ namespace App.Controllers
     {
         private IBusinessRepository _businessRepository;
         private IWebHostEnvironment _hostEnvironment;
+        private UserManager<IdentityUser> _userManager;
         private IHubContext<AppointmentHub> _hub;
 
-        public BusinessController(IBusinessRepository repo, IWebHostEnvironment hostEnvironment)
+        public BusinessController(IBusinessRepository repo, IWebHostEnvironment hostEnvironment, UserManager<IdentityUser> userManager)
         {
             _businessRepository = repo;
             this._hostEnvironment = hostEnvironment;
+            _userManager = userManager;
 
         }
 
-        #region Businesses
+         //Businesses
         // GET: api/Business
-
+        
         [HttpGet]
+        //[Authorize(Policy = UserRoles.Admin)]
         public ActionResult<IEnumerable<Business>> GetBusinesses(string name = null)
         {
             if (string.IsNullOrEmpty(name))
@@ -56,11 +62,11 @@ namespace App.Controllers
         }
 
 
-        [Authorize]
-        [HttpGet("loggedInUser")]
-        public ActionResult<Business> GetBusinessWithoutId()
+        //api/business/email/{your email}
+        [HttpGet("email/{email}")]
+        public ActionResult<Business> GetBusinessWithoutId(string email)
         {
-            Business business = _businessRepository.GetByEmail(User.Identity.Name);
+            Business business = _businessRepository.GetByEmail(email);
 
             if (business == null)
                 return NotFound();
@@ -71,6 +77,7 @@ namespace App.Controllers
         [HttpPut("Business")]
         public ActionResult<Business> PutBusiness(Business business)
         {
+           
             Business business2 = _businessRepository.GetByEmail(User.Identity.Name);
 
             if (business == null)
@@ -100,11 +107,14 @@ namespace App.Controllers
 
             _businessRepository.Delete(business);
             _businessRepository.SaveChanges();
+            
 
             return NoContent();
         }
 
         // Create Business
+        //[Authorize(Policy = UserRoles.User)]
+        //[Authorize(Policy =  UserRoles.User)]
         [HttpPost]
         public ActionResult<Business> CreateBusiness([FromForm]BusinessView businessView)
         {
@@ -121,9 +131,12 @@ namespace App.Controllers
                 BusinessType = businessView.BusinessType,
                 Summary = businessView.Summary,
                 PostalCode = businessView.PostalCode,
-              //  ImageName = SaveImage(businessView.ImageFile)
+                
+                
 
-        };
+                //  ImageName = SaveImage(businessView.ImageFile)
+
+            };
 
             _businessRepository.Add(business);
             _businessRepository.SaveChanges();
@@ -152,7 +165,7 @@ namespace App.Controllers
             if (System.IO.File.Exists(imagePath))
                 System.IO.File.Delete(imagePath);
         }
-        #endregion
+        
 
 
     }

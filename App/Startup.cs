@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using App.Controllers;
 using App.Models;
 using App.Repositories;
 using App.Service;
@@ -35,14 +36,17 @@ namespace App
         {
             services.AddDbContext<ApplicationDbContext>(opt => opt.UseSqlServer(Configuration.GetConnectionString("ApplicationDbContext")));
 
+            
             services.AddCors();
+            services.AddControllers().AddNewtonsoftJson();
 
             services.AddIdentity<IdentityUser, IdentityRole>(options =>
             {
                 options.Password.RequireDigit = true;
                 options.Password.RequireLowercase = true;
                 options.Password.RequiredLength = 5;
-            }).AddEntityFrameworkStores<ApplicationDbContext>()
+            }).AddRoles<IdentityRole>()
+                .AddEntityFrameworkStores<ApplicationDbContext>()
                .AddDefaultTokenProviders();
 
             services.AddAuthentication(auth =>
@@ -63,11 +67,19 @@ namespace App
                 };
             });
 
+
+            
             services.AddScoped<IBusinessRepository, BusinessRepository>();
             services.AddScoped<IUserService,UserService>();
             services.AddScoped<IJWTService, JWTService>();
             services.AddTransient<IMailService, SendGridEmailService>(); // one object for a time
-            services.AddControllers().AddNewtonsoftJson();
+            
+            services.AddAuthorization(config =>
+            {
+                config.AddPolicy(UserRoles.Admin, Policies.AdminPolicy());
+                config.AddPolicy(UserRoles.User, Policies.UserPolicy());
+                config.AddPolicy(UserRoles.Business, Policies.BusinessPolicy());
+            });
 
         }
 
@@ -85,8 +97,10 @@ namespace App
 
             app.UseRouting();
             app.UseStaticFiles();
+            
             app.UseAuthentication();
             app.UseAuthorization();
+
 
             app.UseEndpoints(endpoints =>
             {
