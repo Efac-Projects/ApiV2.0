@@ -131,10 +131,7 @@ namespace App.Controllers
                 BusinessType = businessView.BusinessType,
                 Summary = businessView.Summary,
                 PostalCode = businessView.PostalCode,
-                
-                
-
-                //  ImageName = SaveImage(businessView.ImageFile)
+                ImageName = SaveImage(businessView.ImageFile)
 
             };
 
