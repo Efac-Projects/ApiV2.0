@@ -36,16 +36,16 @@ namespace App.Service
 
             var claims = new List<Claim>
             {
-                new Claim("Id", user.Id),
-                new Claim("Name", user.UserName),
-                new Claim("Email", model.Email),
+                new Claim("userId", user.Id),
+                new Claim("userName", user.UserName),
+                new Claim("email", model.Email),
                 
                // new Claim(ClaimTypes.NameIdentifier, user.Id),
             };
 
             foreach (var userRole in userRoles)
             {
-                claims.Add(new Claim("Role", userRole));
+                claims.Add(new Claim("userRole", userRole));
                 Console.WriteLine(userRole.ToString());
             }
 
@@ -72,16 +72,16 @@ namespace App.Service
 
             var claims = new List<Claim>
             {
-                new Claim("Id", user.Id),
-                new Claim("Name", user.UserName),
-                new Claim("Email", model.Email),
+                new Claim("userId", user.Id),
+                new Claim("userName", user.UserName),
+                new Claim("email", model.Email),
                 
                // new Claim(ClaimTypes.NameIdentifier, user.Id),
             };
 
             foreach (var userRole in userRoles)
             {
-                claims.Add(new Claim(ClaimTypes.Role, userRole));
+                claims.Add(new Claim("userRole", userRole));
                 Console.WriteLine(userRole.ToString());
             }
 

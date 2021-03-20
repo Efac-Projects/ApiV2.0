@@ -32,7 +32,7 @@ namespace App.Models
 
 
 
-        protected Appointment() { }
+        public Appointment() { }
 
 
 

@@ -14,7 +14,7 @@ namespace App.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
+    // [Authorize]
     public class ManageController : ControllerBase
     {
         private readonly IBusinessRepository _businessRepository;
@@ -30,13 +30,13 @@ namespace App.Controllers
 
 
 
-        /// Get all the appointments of the logged in business
+        // Get all the appointments of the logged in business
 
-
-        [HttpGet("Appointments")]
-        public ActionResult<IEnumerable<Appointment>> GetAppointments()
+        //api/manage/appointment/{email}
+        [HttpGet("Appointments/{email}")]
+        public ActionResult<IEnumerable<Appointment>> GetAppointments(string email)
         {
-            Business business = _businessRepository.GetByEmail(User.Identity.Name);
+            Business business = _businessRepository.GetBusiness(email);
 
             if (business == null)
                 return NotFound();
