@@ -16,21 +16,24 @@ namespace App.Models
     {
         [Required]
         public int TreatmentId { get; set; }
-        public string Name { get; set; }
+        public string Name { get; set; } 
         public TimeSpan Duration { get; set; }
         public TreatmentCategory Category { get; set; }
         public double Price { get; set; }
 
+        public int BusinessId { get; set; }
+        public string DoctorName { get; set; } // name of doctor
         public List<Appointment> appointments { get; set; }
 
-        protected Treatment() { }
+        public Treatment() { }
 
-        public Treatment(string name, TimeSpan duration, TreatmentCategory category, double price)
+        public Treatment(string name, TimeSpan duration, TreatmentCategory category, double price )
         {
             Name = name;
             Duration = duration;
             Category = category;
             Price = price;
+            
         }
     }
 }

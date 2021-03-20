@@ -10,9 +10,7 @@ namespace App.Models    // edited now have to change database view
 {
     public class Business
     {
-        public int BusinessId { get; set; }
-
-       
+        public int BusinessId { get; set;}
         public string Name { get; set; }
         public string Email { get; set; }
         public int TotalCrowd { get; set; }
@@ -27,7 +25,7 @@ namespace App.Models    // edited now have to change database view
         public string Summary { get; set; }
         public OpeningHour OpeningHours { get; set; }
         public IList<Appointment> Appointments { get; set; }
-        public IList<Treatment> Treatments { get; set; }
+        public IList<Treatment> Treatments { get; set; } // looks like doctors in medical centre
 
         private TimeSpan _maxTimeBetweenAppointments = new TimeSpan(0, 15, 0);
         public string ImageName { get; set; }

@@ -23,6 +23,7 @@ namespace App.Controllers
 
         // get all appoinments
         // GET: api/Appoinment
+        //works
         [HttpGet]
         public async Task<ActionResult<IEnumerable<AppointmentView>>> GetAllBusiness()
         {
@@ -31,16 +32,18 @@ namespace App.Controllers
                 ).ToListAsync();
         }
 
-        public async Task<ActionResult<IEnumerable<AppointmentView>>> GetAppoinmentbyId(int id)
+        // find appoinment with business id
+        // api/appoinment/id
+        //  works
+        [HttpGet("{id}")]
+        public ActionResult<IEnumerable<AppointmentView>> GetAppoinmentbyId(int id)
         {
-            var appoinment = await _context.Appointments.FindAsync(id);
-
-            if (appoinment == null)
-            {
-                return NotFound();
-            }
-
+            var appoinment = _context.Businesses.Where(b => b.BusinessId == id)
+                                .Include(b => b.Appointments).ToList();
+            
             return Ok(appoinment);
+
+            
         }
 
         // edit appointment
@@ -76,16 +79,19 @@ namespace App.Controllers
             return Ok();
         }
 
-        // Post appointment, instead of int for id USE GUID
+        // Post appointment
+        // api/ appointment
         [HttpPost]
         public async Task<ActionResult<AppointmentView>> CreateAppointment(AppointmentView appointmentView)
         {
             var appointment = new Appointment
             {
-
-                AppointmentId = appointmentView.AppointmentId,
                 
-                
+                BusinessId = appointmentView.BusinessId,
+                FirstName = appointmentView.Firstname,
+                LastName = appointmentView.Lastname,
+                StartMoment = appointmentView.StartMoment,
+                ThreatmentId = appointmentView.TreatmentId
             };
 
             _context.Appointments.Add(appointment);

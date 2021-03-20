@@ -10,13 +10,16 @@ namespace App.ViewModel
     public class TreatmentView
     {
         public int Id { get; set; }
-        [Required]
+
+        public int BusinessId { get; set; }
         public string Name { get; set; }
-        [Required]
+        
         public TimeSpanView Duration { get; set; }
-        [Required]
+        
         public TreatmentCategory Category { get; set; }
-        [Required]
+        
         public double Price { get; set; }
+
+        public string DoctorName { get; set; }
     }
 }
