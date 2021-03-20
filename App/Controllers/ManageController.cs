@@ -41,7 +41,7 @@ namespace App.Controllers
             if (business == null)
                 return NotFound();
 
-            return Ok(business.Appointments.Select(a => new AppointmentView() { AppointmentId = a.AppointmentId, Firstname = a.FirstName, Lastname = a.LastName, StartMoment = a.StartMoment, Treatments = a.Threatment }).ToList());    // as a list
+            return Ok(business.Appointments.Select(a => new AppointmentView() { AppointmentId = a.AppointmentId, Firstname = a.FirstName, Lastname = a.LastName, StartMoment = a.StartMoment }).ToList());    // as a list
         }
 
 
@@ -60,7 +60,7 @@ namespace App.Controllers
             if (appointment == null)
                 return NotFound();
 
-            return Ok(new AppointmentView() { AppointmentId = appointment.AppointmentId, Firstname = appointment.FirstName, Lastname = appointment.LastName, StartMoment = appointment.StartMoment, Treatments = appointment.Threatment });
+            return Ok(new AppointmentView() { AppointmentId = appointment.AppointmentId, Firstname = appointment.FirstName, Lastname = appointment.LastName, StartMoment = appointment.StartMoment });
         }
 
 
@@ -85,7 +85,7 @@ namespace App.Controllers
 
 
         /// Add a new treatment to the logged in business
-
+        
         [HttpPost("Treatments")]
         public ActionResult<Treatment> PostTreatment(TreatmentView treatment)
         {

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -10,25 +11,31 @@ namespace App.Models
     {
 
         public int AppointmentId { get; set; }
+
+        public int BusinessId { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
+
+        public int ThreatmentId { get; set; }
+
+        [NotMapped]
         public Treatment Threatment { get; set; }
         public DateTime StartMoment { get; set; }
-        public DateTime EndMoment => StartMoment.Add(TotalDuration);
+        public DateTime EndMoment => StartMoment;
 
         // find total duration for one appointment, this should changed according to requirements
-        public TimeSpan TotalDuration
-        {
-            get
-            {
-                TimeSpan totalDuration = new TimeSpan();
+       // public TimeSpan TotalDuration
+       // {
+            //get
+            //{
+                //TimeSpan totalDuration = new TimeSpan();
                 //foreach (AppointmentTreatment tr in Treatments) totalDuration = totalDuration.Add(tr.Treatment.Duration);
-                totalDuration = Threatment.Duration;
-                return totalDuration;
+                //totalDuration = Threatment.Duration;
+                //return totalDuration;
 
 
-            }
-        }
+            //}
+       // }
 
 
 
@@ -36,16 +43,7 @@ namespace App.Models
 
 
 
-        public Appointment(Treatment treatments, DateTime startMoment, string firstname, string lastname)
-        {
-            Threatment = treatments;
-            //foreach (Treatment tr in treatments) Treatments.Add(new AppointmentTreatment(this, tr));
-
-            StartMoment = startMoment;
-            FirstName = firstname;
-            LastName = lastname;
-        }
-
+        
 
 
 

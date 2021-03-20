@@ -70,6 +70,7 @@ namespace App.Repositories
                  .SingleOrDefault(hd => hd.BusinessId == id);
         }
 
+        //working method
         public IEnumerable<Business> GetBy(string name = null)
         {
             return _businesses.Where(hd => hd.Name.StartsWith(name))
@@ -88,6 +89,7 @@ namespace App.Repositories
                                .ToList();
         }
 
+        // Working mehthod
         public Business GetByEmail(string email)
         {
             return _businesses.Where(hd => hd.Email == email)

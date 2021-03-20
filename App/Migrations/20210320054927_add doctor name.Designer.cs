@@ -4,14 +4,16 @@ using AspNetIdentityDemo.Api.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace App.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210320054927_add doctor name")]
+    partial class adddoctorname
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -38,17 +40,14 @@ namespace App.Migrations
                     b.Property<DateTime>("StartMoment")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("ThreatmentId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("TreatmentId")
+                    b.Property<int?>("ThreatmentTreatmentId")
                         .HasColumnType("int");
 
                     b.HasKey("AppointmentId");
 
                     b.HasIndex("BusinessId");
 
-                    b.HasIndex("TreatmentId");
+                    b.HasIndex("ThreatmentTreatmentId");
 
                     b.ToTable("Appointments");
                 });
@@ -185,7 +184,7 @@ namespace App.Migrations
                         .HasColumnType("int")
                         .UseIdentityColumn();
 
-                    b.Property<int>("BusinessId")
+                    b.Property<int?>("BusinessId")
                         .HasColumnType("int");
 
                     b.Property<int>("Category")
@@ -434,9 +433,11 @@ namespace App.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("App.Models.Treatment", null)
+                    b.HasOne("App.Models.Treatment", "Threatment")
                         .WithMany("appointments")
-                        .HasForeignKey("TreatmentId");
+                        .HasForeignKey("ThreatmentTreatmentId");
+
+                    b.Navigation("Threatment");
                 });
 
             modelBuilder.Entity("App.Models.Business", b =>
@@ -471,9 +472,7 @@ namespace App.Migrations
                 {
                     b.HasOne("App.Models.Business", null)
                         .WithMany("Treatments")
-                        .HasForeignKey("BusinessId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("BusinessId");
                 });
 
             modelBuilder.Entity("App.Models.WorkDay", b =>

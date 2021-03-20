@@ -10,13 +10,17 @@ namespace App.ViewModel
     public class AppointmentView
     {
         public int AppointmentId { get; set; }
+
+        public int BusinessId { get; set; }
         [Required]
         public string Firstname { get; set; }
+
+
         [Required]
         public string Lastname { get; set; }
         [Required]
         public DateTime StartMoment { get; set; }
         [Required]
-        public Treatment Treatments { get; set; }
+        public int  TreatmentId { get; set; }
     }
 }
