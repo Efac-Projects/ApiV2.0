@@ -14,6 +14,8 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using System.Security.Claims;
 using App.Extension;
+using AspNetIdentityDemo.Api.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace App.Controllers
 {
@@ -25,19 +27,22 @@ namespace App.Controllers
     {
         private IBusinessRepository _businessRepository;
         private IWebHostEnvironment _hostEnvironment;
-        private UserManager<IdentityUser> _userManager;
+        private readonly ApplicationDbContext _context;
+
         //private IHubContext<AppointmentHub> _hub;
 
-        public BusinessController(IBusinessRepository repo, IWebHostEnvironment hostEnvironment, UserManager<IdentityUser> userManager)
+        public BusinessController(IBusinessRepository repo, IWebHostEnvironment hostEnvironment, ApplicationDbContext context)
         {
             _businessRepository = repo;
             this._hostEnvironment = hostEnvironment;
-            _userManager = userManager;
+            _context = context;
+            
 
         }
 
-         //Businesses
+        //Businesses
         // GET: api/Business
+        // This get method is used to gel all business info inside business proffile
         
         [HttpGet]
         //[Authorize(Policy = UserRoles.Admin)]
@@ -46,6 +51,24 @@ namespace App.Controllers
             if (string.IsNullOrEmpty(name))
                 return Ok(_businessRepository.GetAll());
             else return Ok(_businessRepository.GetBy(name));
+        }
+
+        // get business card image details
+        // api/business/card
+        [HttpGet("card")]
+        public async Task<ActionResult<IEnumerable<Business>>> GetEmployees()
+        {
+            return await _context.Businesses
+                .Select(x => new Business()
+                {
+                    BusinessId = x.BusinessId,
+                    Name = x.Name,
+                    Email = x.Email,
+                    Summary = x.Summary,
+                    ImageName = x.ImageName,
+                    ImageSrc = String.Format("{0}://{1}{2}/Images/{3}", Request.Scheme, Request.Host, Request.PathBase, x.ImageName)
+                })
+                .ToListAsync();
         }
 
         // GET: api/Business/1
@@ -73,31 +96,39 @@ namespace App.Controllers
 
             return Ok(business);
         }
-        
-        //api/business/update/{email}
-        [HttpPut("update/{email}")]
-        public ActionResult<Business> PutBusiness(String email,BusinessView businessView)
+
+        // update method  for businesses new,
+        //api/business/id
+
+        [HttpPut("{id}")]
+        //[Authorize(Roles = "Admin,Business")]
+        public async Task<IActionResult> UpdateBusiness(int id, BusinessView businessView)
         {
-           
-            var business = _businessRepository.GetByEmail(email);
+            
 
+            var business = await _context.Businesses.FindAsync(id);
             if (business == null)
+            {
                 return NotFound();
-
-           // if (business.BusinessId != business2.BusinessId)
-              //  return BadRequest();
+            }
 
             business.Name = businessView.BusinessName;
             business.TotalCrowd = businessView.TotalCrowd;
             business.CurrentCrowd = businessView.CurrentCrowd;
             business.PhoneNumber = businessView.PhoneNumber;
-            business.PostalCode = businessView.PostalCode;
-            business.Email = businessView.Email;  // user can not change email address 
-            business.BusinessType = businessView.BusinessType;
             business.Summary = businessView.Summary;
 
-            _businessRepository.Update(business);
-            _businessRepository.SaveChanges();
+
+
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                return NotFound();
+            }
 
             return Ok(business);
         }
@@ -139,7 +170,7 @@ namespace App.Controllers
                 BusinessType = businessView.BusinessType,
                 Summary = businessView.Summary,
                 PostalCode = businessView.PostalCode,
-                ImageName = SaveImage(businessView.ImageFile)
+                //ImageName = SaveImage(businessView.ImageFile)
 
             };
 
@@ -157,7 +188,7 @@ namespace App.Controllers
             var imagePath = Path.Combine(_hostEnvironment.ContentRootPath, "Images", imageName);
             using (var fileStream = new FileStream(imagePath, FileMode.Create))
             {
-                 imageFile.CopyToAsync(fileStream);
+                 imageFile.CopyTo(fileStream);
             }
             return imageName;
         }

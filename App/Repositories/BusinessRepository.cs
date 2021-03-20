@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
+
 namespace App.Repositories
 {
     public class BusinessRepository : IBusinessRepository
@@ -38,6 +39,17 @@ namespace App.Repositories
                 .Include(hd => hd.Treatments)
                 .AsNoTracking()
                 .ToList();
+        }
+
+        public Business GetBusiness(string email)
+        {
+            var business = _businesses.Find(email);
+
+            if (business == null) {
+                Console.WriteLine("No business find with email");
+            }
+
+            return business;
         }
 
         public Business GetBy(int id)
