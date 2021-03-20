@@ -56,8 +56,8 @@ namespace App.Repositories
         {
             return _businesses
                  .Include(hd => hd.Treatments)
-                 .Include(hd => hd.Appointments)
-                     .ThenInclude(hd => hd.Threatment)
+                 //.Include(hd => hd.Appointments)
+                   //  .ThenInclude(hd => hd.Threatment)
                  // Change some code here
                  .Include(hd => hd.OpeningHours)
                      .ThenInclude(hd => hd.WorkDays)

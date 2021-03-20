@@ -17,10 +17,8 @@ namespace App.Models
         public string LastName { get; set; }
 
         public int ThreatmentId { get; set; }
-
-        [NotMapped]
         public Treatment Threatment { get; set; }
-        public DateTime StartMoment { get; set; }
+        public DateTime StartMoment { get; set; }  // this should be removed 
         public DateTime EndMoment => StartMoment;
 
         // find total duration for one appointment, this should changed according to requirements

@@ -123,6 +123,11 @@ namespace App.Controllers
             new AppointmentView
             {
                 AppointmentId = appointment.AppointmentId,
+                BusinessId = appointment.BusinessId,
+                Firstname = appointment.FirstName,
+                Lastname = appointment.LastName,
+                TreatmentId = appointment.ThreatmentId
+                
                 
             };
 
