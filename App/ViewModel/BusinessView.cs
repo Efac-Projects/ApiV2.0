@@ -10,7 +10,7 @@ namespace App.ViewModel
     public class BusinessView
     {
         public int BusinessId { get; set; }
-        public string BusinessName { get; set; }
+        public string Name { get; set; }
         public int TotalCrowd { get; set; }
         public int CurrentCrowd { get; set; }
         public int PhoneNumber { get; set; }

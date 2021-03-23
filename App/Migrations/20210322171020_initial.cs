@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace App.Migrations
 {
-    public partial class Newtest : Migration
+    public partial class initial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -209,8 +209,7 @@ namespace App.Migrations
                     BusinessType = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Summary = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     OpeningHoursId = table.Column<int>(type: "int", nullable: true),
-                    BannerPath = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    CardImagePath = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    ImageName = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -253,7 +252,8 @@ namespace App.Migrations
                     Duration = table.Column<TimeSpan>(type: "time", nullable: false),
                     Category = table.Column<int>(type: "int", nullable: false),
                     Price = table.Column<double>(type: "float", nullable: false),
-                    BusinessId = table.Column<int>(type: "int", nullable: true)
+                    BusinessId = table.Column<int>(type: "int", nullable: false),
+                    DoctorName = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -263,7 +263,7 @@ namespace App.Migrations
                         column: x => x.BusinessId,
                         principalTable: "Businesses",
                         principalColumn: "BusinessId",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -305,11 +305,12 @@ namespace App.Migrations
                 {
                     AppointmentId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
+                    BusinessId = table.Column<int>(type: "int", nullable: false),
                     FirstName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     LastName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    TestTreatment = table.Column<int>(type: "int", nullable: false),
                     ThreatmentTreatmentId = table.Column<int>(type: "int", nullable: true),
-                    StartMoment = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    BusinessId = table.Column<int>(type: "int", nullable: true)
+                    StartMoment = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -319,7 +320,7 @@ namespace App.Migrations
                         column: x => x.BusinessId,
                         principalTable: "Businesses",
                         principalColumn: "BusinessId",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Appointments_Treatments_ThreatmentTreatmentId",
                         column: x => x.ThreatmentTreatmentId,

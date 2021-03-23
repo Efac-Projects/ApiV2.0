@@ -105,7 +105,7 @@ namespace App.Models    // edited now have to change database view
 
         public void RemoveAppointment(Appointment appointment)
         {
-            appointment.Threatment = null;
+            //appointment.Threatment = null;
             Appointments.Remove(appointment);
         }
 

@@ -29,23 +29,35 @@ namespace App.Migrations
                     b.Property<int>("BusinessId")
                         .HasColumnType("int");
 
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("FirstName")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("LastName")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("PhoneNumber")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<DateTime>("StartMoment")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("ThreatmentId")
+                    b.Property<int>("TestTreatment")
                         .HasColumnType("int");
+
+                    b.Property<int?>("ThreatmentTreatmentId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Timezone")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("AppointmentId");
 
                     b.HasIndex("BusinessId");
 
-                    b.HasIndex("ThreatmentId");
+                    b.HasIndex("ThreatmentTreatmentId");
 
                     b.ToTable("Appointments");
                 });
@@ -433,9 +445,7 @@ namespace App.Migrations
 
                     b.HasOne("App.Models.Treatment", "Threatment")
                         .WithMany("appointments")
-                        .HasForeignKey("ThreatmentId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("ThreatmentTreatmentId");
 
                     b.Navigation("Threatment");
                 });
