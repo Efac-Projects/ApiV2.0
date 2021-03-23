@@ -16,6 +16,7 @@ using System.Security.Claims;
 using App.Extension;
 using AspNetIdentityDemo.Api.Models;
 using Microsoft.EntityFrameworkCore;
+using Hangfire;
 
 namespace App.Controllers
 {
@@ -28,15 +29,18 @@ namespace App.Controllers
         private IBusinessRepository _businessRepository;
         private IWebHostEnvironment _hostEnvironment;
         private readonly ApplicationDbContext _context;
+        private readonly IBackgroundJobClient _backgroundJobClient;
 
         //private IHubContext<AppointmentHub> _hub;
 
-        public BusinessController(IBusinessRepository repo, IWebHostEnvironment hostEnvironment, ApplicationDbContext context)
+        public BusinessController(IBusinessRepository repo, IWebHostEnvironment hostEnvironment, ApplicationDbContext context, IBackgroundJobClient backgroundJobClient)
         {
             _businessRepository = repo;
             this._hostEnvironment = hostEnvironment;
             _context = context;
-            
+            _backgroundJobClient = backgroundJobClient;
+
+
 
         }
 
@@ -102,9 +106,11 @@ namespace App.Controllers
 
         [HttpPut("{id}")]
         //[Authorize(Roles = "Admin,Business")]
-        public async Task<IActionResult> UpdateBusiness(int id, BusinessView businessView)
+        public async Task<IActionResult> UpdateBusiness(int id, [FromForm]BusinessView businessView)
         {
+
             
+
 
             var business = await _context.Businesses.FindAsync(id);
             if (business == null)
@@ -112,7 +118,7 @@ namespace App.Controllers
                 return NotFound();
             }
 
-            business.Name = businessView.BusinessName;
+            business.Name = businessView.Name;
             business.TotalCrowd = businessView.TotalCrowd;
             business.CurrentCrowd = businessView.CurrentCrowd;
             business.PhoneNumber = businessView.PhoneNumber;
@@ -155,14 +161,13 @@ namespace App.Controllers
         //[Authorize(Policy = UserRoles.User)]
         //[Authorize(Policy =  UserRoles.User)]
         [HttpPost]
-        public ActionResult<Business> CreateBusiness([FromForm]BusinessView businessView)
+        public ActionResult<Business> CreateBusiness(BusinessView businessView)
         {
             
-
             var business = new Business
             {
 
-                Name = businessView.BusinessName,
+                Name = businessView.Name,
                 Email = businessView.Email,
                 TotalCrowd = businessView.TotalCrowd,
                 CurrentCrowd = businessView.CurrentCrowd,

@@ -76,7 +76,7 @@ namespace App.Repositories
             return _businesses.Where(hd => hd.Name.StartsWith(name))
                                .Include(hd => hd.Treatments)
                                .Include(hd => hd.Appointments)
-                                   .ThenInclude(hd => hd.Threatment)
+                                  // .ThenInclude(hd => hd.Threatment)
 
                                .Include(hd => hd.OpeningHours)
                                    .ThenInclude(hd => hd.WorkDays)
@@ -95,7 +95,7 @@ namespace App.Repositories
             return _businesses.Where(hd => hd.Email == email)
                                 .Include(hd => hd.Treatments)
                                 .Include(hd => hd.Appointments)
-                                    .ThenInclude(hd => hd.Threatment)
+                                   // .ThenInclude(hd => hd.Threatment)
                                 // code changed to one to one relationship
                                 .Include(hd => hd.OpeningHours)
                                     .ThenInclude(hd => hd.WorkDays)

@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace App.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20210320054927_add doctor name")]
-    partial class adddoctorname
+    [Migration("20210323133741_Change appoinment schema")]
+    partial class Changeappoinmentschema
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -31,17 +31,29 @@ namespace App.Migrations
                     b.Property<int>("BusinessId")
                         .HasColumnType("int");
 
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("FirstName")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("LastName")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("PhoneNumber")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<DateTime>("StartMoment")
                         .HasColumnType("datetime2");
 
+                    b.Property<int>("TestTreatment")
+                        .HasColumnType("int");
+
                     b.Property<int?>("ThreatmentTreatmentId")
                         .HasColumnType("int");
+
+                    b.Property<string>("Timezone")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("AppointmentId");
 
@@ -184,7 +196,7 @@ namespace App.Migrations
                         .HasColumnType("int")
                         .UseIdentityColumn();
 
-                    b.Property<int?>("BusinessId")
+                    b.Property<int>("BusinessId")
                         .HasColumnType("int");
 
                     b.Property<int>("Category")
@@ -472,7 +484,9 @@ namespace App.Migrations
                 {
                     b.HasOne("App.Models.Business", null)
                         .WithMany("Treatments")
-                        .HasForeignKey("BusinessId");
+                        .HasForeignKey("BusinessId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("App.Models.WorkDay", b =>

@@ -12,15 +12,20 @@ namespace App.ViewModel
         public int AppointmentId { get; set; }
 
         public int BusinessId { get; set; }
-        [Required]
+        
         public string Firstname { get; set; }
 
-
-        [Required]
         public string Lastname { get; set; }
-        [Required]
+
         public DateTime StartMoment { get; set; }
-        [Required]
+
+        public DateTime CreatedAt = DateTime.Now; 
+        public string TimeZone = TimeZoneInfo.Local.DisplayName;
+        public string PhoneNumber { get; set; }  
         public int  TreatmentId { get; set; }
+
+        
+
+        
     }
 }

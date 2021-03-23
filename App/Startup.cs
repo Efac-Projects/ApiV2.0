@@ -4,10 +4,13 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using App.Controllers;
+using App.HangFire;
 using App.Models;
 using App.Repositories;
 using App.Service;
 using AspNetIdentityDemo.Api.Models;
+using Hangfire;
+using Hangfire.SqlServer;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -38,7 +41,7 @@ namespace App
         {
             services.AddDbContext<ApplicationDbContext>(opt => opt.UseSqlServer(Configuration.GetConnectionString("ApplicationDbContext")));
 
-            
+
             services.AddCors();
             services.AddControllers().AddNewtonsoftJson();
 
@@ -70,9 +73,26 @@ namespace App
                 };
             });
 
+            // Add Hangfire services.
+            services.AddHangfire(configuration => configuration
+                .SetDataCompatibilityLevel(CompatibilityLevel.Version_170)
+                .UseSimpleAssemblyNameTypeSerializer()
+                .UseRecommendedSerializerSettings()
+                .UseSqlServerStorage(Configuration.GetConnectionString("HangfireConnection"), new SqlServerStorageOptions
+                {
+                    CommandBatchMaxTimeout = TimeSpan.FromMinutes(5),
+                    SlidingInvisibilityTimeout = TimeSpan.FromMinutes(5),
+                    QueuePollInterval = TimeSpan.Zero,
+                    UseRecommendedIsolationLevel = true,
+                    DisableGlobalLocks = true
+                }));
 
-            
+            // Add the processing server as IHostedService
+            services.AddHangfireServer();
+
+
             services.AddScoped<IBusinessRepository, BusinessRepository>();
+            services.AddScoped<IAppointmentRepository, AppointmentRepository>();
             services.AddScoped<IUserService,UserService>();
             services.AddScoped<IJWTService, JWTService>();
             services.AddTransient<IMailService, SendGridEmailService>(); // one object for a time
@@ -105,18 +125,25 @@ namespace App
             });
             app.UseStaticFiles();
 
-
-           
+            app.UseHangfireDashboard();
+          
             app.UseCors(options => options.WithOrigins("http://localhost:3000").AllowAnyHeader().AllowAnyMethod());
             app.UseAuthentication();
             app.UseRouting();
             app.UseAuthorization();
 
-           
+
+
+
+            //RecurringJob.AddOrUpdate<SendNotificationsJob>(job => job.Execute(), Cron.Minutely);
+            //RecurringJob.AddOrUpdate(() => Console.WriteLine("Hangfire reccuring") , Cron.Minutely);
+
+
 
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapHangfireDashboard();
             });
             
             

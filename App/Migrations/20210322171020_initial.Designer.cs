@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace App.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20210305033955_Remove change image handler coloumn")]
-    partial class Removechangeimagehandlercoloumn
+    [Migration("20210322171020_initial")]
+    partial class initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -28,7 +28,7 @@ namespace App.Migrations
                         .HasColumnType("int")
                         .UseIdentityColumn();
 
-                    b.Property<int?>("BusinessId")
+                    b.Property<int>("BusinessId")
                         .HasColumnType("int");
 
                     b.Property<string>("FirstName")
@@ -39,6 +39,9 @@ namespace App.Migrations
 
                     b.Property<DateTime>("StartMoment")
                         .HasColumnType("datetime2");
+
+                    b.Property<int>("TestTreatment")
+                        .HasColumnType("int");
 
                     b.Property<int?>("ThreatmentTreatmentId")
                         .HasColumnType("int");
@@ -184,11 +187,14 @@ namespace App.Migrations
                         .HasColumnType("int")
                         .UseIdentityColumn();
 
-                    b.Property<int?>("BusinessId")
+                    b.Property<int>("BusinessId")
                         .HasColumnType("int");
 
                     b.Property<int>("Category")
                         .HasColumnType("int");
+
+                    b.Property<string>("DoctorName")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<TimeSpan>("Duration")
                         .HasColumnType("time");
@@ -426,7 +432,9 @@ namespace App.Migrations
                 {
                     b.HasOne("App.Models.Business", null)
                         .WithMany("Appointments")
-                        .HasForeignKey("BusinessId");
+                        .HasForeignKey("BusinessId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("App.Models.Treatment", "Threatment")
                         .WithMany("appointments")
@@ -467,7 +475,9 @@ namespace App.Migrations
                 {
                     b.HasOne("App.Models.Business", null)
                         .WithMany("Treatments")
-                        .HasForeignKey("BusinessId");
+                        .HasForeignKey("BusinessId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("App.Models.WorkDay", b =>

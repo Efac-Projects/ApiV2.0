@@ -35,7 +35,7 @@ namespace App.Controllers
         }
 
         // create treatment
-        [HttpPost]
+        [HttpPost("{id}")]
         public ActionResult<Treatment> CreateTreatment(TreatmentView treatmentView) {
 
             var Treatment = new Treatment

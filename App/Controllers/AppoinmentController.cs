@@ -1,6 +1,9 @@
 ﻿using App.Models;
+using App.Repositories;
+using App.Twilio;
 using App.ViewModel;
 using AspNetIdentityDemo.Api.Models;
+using Hangfire;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -12,24 +15,25 @@ namespace App.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class AppoinmentController : ControllerBase
+    public class AppoinmentController : ControllerBase                                                                                                                                                                                 
     {
         private readonly ApplicationDbContext _context;
+        private readonly IAppointmentRepository _repo;
 
-        public AppoinmentController(ApplicationDbContext context)
+        public AppoinmentController(ApplicationDbContext context, IAppointmentRepository repo)
         {
             _context = context;
+            _repo = repo;
+            
         }
 
         // get all appoinments
         // GET: api/Appoinment
         //works
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<AppointmentView>>> GetAllBusiness()
+        public  ActionResult<IEnumerable<AppointmentView>> GetAllAppoinments()
         {
-            return await _context.Appointments.
-                Select(x => AppointmentViewReturn(x)
-                ).ToListAsync();
+            return Ok(_repo.FindAll());
         }
 
         // find appoinment with business id
@@ -38,8 +42,7 @@ namespace App.Controllers
         [HttpGet("{id}")]
         public ActionResult<IEnumerable<AppointmentView>> GetAppoinmentbyId(int id)
         {
-            var appoinment = _context.Businesses.Where(b => b.BusinessId == id)
-                                .Include(b => b.Appointments).ToList();
+            var appoinment = _context.Appointments.Where(b => b.BusinessId == id).ToList();
             
             return Ok(appoinment);
 
@@ -82,20 +85,28 @@ namespace App.Controllers
         // Post appointment
         // api/ appointment
         [HttpPost]
-        public async Task<ActionResult<AppointmentView>> CreateAppointment(AppointmentView appointmentView)
+        public  ActionResult<Appointment> CreateAppointment( AppointmentView appointmentView)
         {
+            
+          
+
             var appointment = new Appointment
             {
-                
+
                 BusinessId = appointmentView.BusinessId,
                 FirstName = appointmentView.Firstname,
                 LastName = appointmentView.Lastname,
                 StartMoment = appointmentView.StartMoment,
-                ThreatmentId = appointmentView.TreatmentId
-            };
+                PhoneNumber = appointmentView.PhoneNumber,
+                CreatedAt = appointmentView.CreatedAt,
+                Timezone = appointmentView.TimeZone
+        };
 
-            _context.Appointments.Add(appointment);
-            await _context.SaveChangesAsync();
+           
+
+          
+            _repo.Add(appointment);
+            _repo.SaveChanges();
 
             return Ok(appointment);
 
@@ -119,18 +130,18 @@ namespace App.Controllers
         }
 
         //  Appointment to AppointmentView
-        private static AppointmentView AppointmentViewReturn(Appointment appointment) =>
-            new AppointmentView
-            {
-                AppointmentId = appointment.AppointmentId,
-                BusinessId = appointment.BusinessId,
-                Firstname = appointment.FirstName,
-                Lastname = appointment.LastName,
-                TreatmentId = appointment.ThreatmentId
-                
-                
-            };
 
+        private static AppointmentView AppointmentViewReturn(Appointment appointment) =>
+           new AppointmentView
+           {
+               AppointmentId = appointment.AppointmentId,
+               BusinessId = appointment.BusinessId,
+               Firstname = appointment.FirstName,
+               Lastname = appointment.LastName,
+               //TreatmentId = appointment.TreatmentId
+
+
+           };
 
 
     }
