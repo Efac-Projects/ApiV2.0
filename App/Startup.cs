@@ -134,12 +134,6 @@ namespace App
 
 
 
-
-            //RecurringJob.AddOrUpdate<SendNotificationsJob>(job => job.Execute(), Cron.Minutely);
-            //RecurringJob.AddOrUpdate(() => Console.WriteLine("Hangfire reccuring") , Cron.Minutely);
-
-
-
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();

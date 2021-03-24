@@ -17,7 +17,7 @@ namespace App.ViewModel
 
         public string Lastname { get; set; }
 
-        public DateTime StartMoment { get; set; }
+        public DateTime StartMoment { get; set; } 
 
         public DateTime CreatedAt = DateTime.Now; 
         public string TimeZone = TimeZoneInfo.Local.DisplayName;

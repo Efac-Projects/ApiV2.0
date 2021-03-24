@@ -26,9 +26,17 @@ namespace App.Repositories
         // Find all appoinments
         public IEnumerable<Appointment> FindAll()
         {
-            var appointments = _context.Appointments.ToList();
+            var appointments = new List<Appointment>();
+            try
+            {
+                 appointments = _context.Appointments.ToList();
 
-            if (appointments == null) { }
+                return appointments;
+            }
+
+            catch(Exception e) {
+                Console.WriteLine(e.Message);
+            }
 
             return appointments;
         }
