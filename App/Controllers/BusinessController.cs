@@ -106,7 +106,7 @@ namespace App.Controllers
 
         [HttpPut("{id}")]
         //[Authorize(Roles = "Admin,Business")]
-        public async Task<IActionResult> UpdateBusiness(int id, [FromForm]BusinessView businessView)
+        public async Task<IActionResult> UpdateBusiness(int id, BusinessView businessView)
         {
 
             

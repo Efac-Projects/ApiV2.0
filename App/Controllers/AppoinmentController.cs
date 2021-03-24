@@ -1,4 +1,5 @@
-﻿using App.Models;
+﻿using App.HangFire;
+using App.Models;
 using App.Repositories;
 using App.Twilio;
 using App.ViewModel;
@@ -15,7 +16,7 @@ namespace App.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class AppoinmentController : ControllerBase                                                                                                                                                                                 
+    public class AppoinmentController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
         private readonly IAppointmentRepository _repo;
@@ -24,14 +25,14 @@ namespace App.Controllers
         {
             _context = context;
             _repo = repo;
-            
+
         }
 
         // get all appoinments
         // GET: api/Appoinment
         //works
         [HttpGet]
-        public  ActionResult<IEnumerable<AppointmentView>> GetAllAppoinments()
+        public ActionResult<IEnumerable<AppointmentView>> GetAllAppoinments()
         {
             return Ok(_repo.FindAll());
         }
@@ -43,10 +44,10 @@ namespace App.Controllers
         public ActionResult<IEnumerable<AppointmentView>> GetAppoinmentbyId(int id)
         {
             var appoinment = _context.Appointments.Where(b => b.BusinessId == id).ToList();
-            
+
             return Ok(appoinment);
 
-            
+
         }
 
         // edit appointment
@@ -64,8 +65,8 @@ namespace App.Controllers
                 return NotFound();
             }
 
-            
-           
+
+
 
 
 
@@ -83,8 +84,8 @@ namespace App.Controllers
         }
 
         // Post appointment
-        // api/ appointment
-        [HttpPost]
+        // api/appointment/id
+        [HttpPost("{id}")]
         public  ActionResult<Appointment> CreateAppointment( AppointmentView appointmentView)
         {
             
@@ -102,9 +103,11 @@ namespace App.Controllers
                 Timezone = appointmentView.TimeZone
         };
 
-           
 
-          
+            TimeSpan time = appointmentView.StartMoment.TimeOfDay - appointmentView.CreatedAt.TimeOfDay;
+            int timeValue = (int)time.TotalMinutes - 30; 
+           // BackgroundJob.Schedule<SendNotificationAppoinment>((job) =>job.Execute(appointment) ,TimeSpan.FromMinutes(1));
+
             _repo.Add(appointment);
             _repo.SaveChanges();
 

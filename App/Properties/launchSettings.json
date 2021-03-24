@@ -23,8 +23,11 @@
       "launchUrl": "hangfire",
       "applicationUrl": "https://localhost:5001;http://localhost:5000",
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
-        
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "AccountSid": "ACcc6e24a46596dde2bad0c5c08379b6d3",
+        "AuthToken": "53b51b93a272cfdec739b293d3cde887",
+        "TwilioNumber": "+12246287858"
+
 
       }
     }
