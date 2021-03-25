@@ -308,9 +308,12 @@ namespace App.Migrations
                     BusinessId = table.Column<int>(type: "int", nullable: false),
                     FirstName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     LastName = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    TestTreatment = table.Column<int>(type: "int", nullable: false),
-                    ThreatmentTreatmentId = table.Column<int>(type: "int", nullable: true),
-                    StartMoment = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    PhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Timezone = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ThreatmentId = table.Column<int>(type: "int", nullable: false),
+                    StartMoment = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    TreatmentId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -322,8 +325,8 @@ namespace App.Migrations
                         principalColumn: "BusinessId",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Appointments_Treatments_ThreatmentTreatmentId",
-                        column: x => x.ThreatmentTreatmentId,
+                        name: "FK_Appointments_Treatments_TreatmentId",
+                        column: x => x.TreatmentId,
                         principalTable: "Treatments",
                         principalColumn: "TreatmentId",
                         onDelete: ReferentialAction.Restrict);
@@ -335,9 +338,9 @@ namespace App.Migrations
                 column: "BusinessId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Appointments_ThreatmentTreatmentId",
+                name: "IX_Appointments_TreatmentId",
                 table: "Appointments",
-                column: "ThreatmentTreatmentId");
+                column: "TreatmentId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
