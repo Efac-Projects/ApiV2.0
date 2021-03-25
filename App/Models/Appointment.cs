@@ -1,4 +1,6 @@
-﻿using System;
+﻿using App.ViewModel;
+using AspNetIdentityDemo.Api.Models;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -10,6 +12,8 @@ namespace App.Models
     public class Appointment
     {
         public static int ReminderTime = 30;
+        
+
         public int AppointmentId { get; set; }
 
         public int BusinessId { get; set; }
@@ -19,9 +23,9 @@ namespace App.Models
         [Phone]
         public string PhoneNumber { get; set; }
         public string Timezone { get; set; }
-        
+
         [ForeignKey("TreatmentId")]
-        public int ThreatmentId { get; set; }
+        public Treatment Treatment { get; set; }
         public DateTime StartMoment { get; set; }  // time in sms sender 
         public DateTime EndMoment => StartMoment;
         public DateTime CreatedAt { get; set; }
@@ -45,7 +49,11 @@ namespace App.Models
 
 
 
-        public Appointment() { }
+      //  public Appointment() { }
+
+        public Appointment() {
+           
+        }
 
 
 

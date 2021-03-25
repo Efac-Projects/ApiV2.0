@@ -89,9 +89,9 @@ namespace App.Controllers
         public  ActionResult<Appointment> CreateAppointment( AppointmentView appointmentView)
         {
 
+            int id = appointmentView.TreatmentId;
 
-
-            var appointment = new Appointment
+            var appointment = new Appointment()
             {
 
                 BusinessId = appointmentView.BusinessId,
@@ -101,7 +101,8 @@ namespace App.Controllers
                 PhoneNumber = appointmentView.PhoneNumber,
                 CreatedAt = appointmentView.CreatedAt,
                 Timezone = appointmentView.TimeZone,
-                ThreatmentId = appointmentView.TreatmentId
+                Treatment = _context.Treatments.Find(appointmentView.TreatmentId)
+                
 
             };
 

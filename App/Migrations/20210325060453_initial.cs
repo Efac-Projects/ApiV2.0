@@ -310,10 +310,9 @@ namespace App.Migrations
                     LastName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     PhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Timezone = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ThreatmentId = table.Column<int>(type: "int", nullable: false),
+                    TreatmentId = table.Column<int>(type: "int", nullable: true),
                     StartMoment = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    TreatmentId = table.Column<int>(type: "int", nullable: true)
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {

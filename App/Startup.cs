@@ -24,6 +24,7 @@ using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
+using Newtonsoft.Json;
 
 namespace App
 {
@@ -43,7 +44,9 @@ namespace App
 
 
             services.AddCors();
-            services.AddControllers().AddNewtonsoftJson();
+            services.AddControllers().AddNewtonsoftJson(options =>
+                options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+                );
 
             services.AddIdentity<IdentityUser, IdentityRole>(options =>
             {
@@ -96,7 +99,7 @@ namespace App
             services.AddScoped<IUserService,UserService>();
             services.AddScoped<IJWTService, JWTService>();
             services.AddTransient<IMailService, SendGridEmailService>(); // one object for a time
-            
+           
             services.AddAuthorization(config =>
             {
                 config.AddPolicy(UserRoles.Admin, Policies.AdminPolicy());
