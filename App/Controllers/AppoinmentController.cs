@@ -88,8 +88,8 @@ namespace App.Controllers
         [HttpPost("{id}")]
         public  ActionResult<Appointment> CreateAppointment( AppointmentView appointmentView)
         {
-            
-          
+
+
 
             var appointment = new Appointment
             {
@@ -100,8 +100,10 @@ namespace App.Controllers
                 StartMoment = appointmentView.StartMoment,
                 PhoneNumber = appointmentView.PhoneNumber,
                 CreatedAt = appointmentView.CreatedAt,
-                Timezone = appointmentView.TimeZone
-        };
+                Timezone = appointmentView.TimeZone,
+                ThreatmentId = appointmentView.TreatmentId
+
+            };
 
 
             TimeSpan time = appointmentView.StartMoment.TimeOfDay - appointmentView.CreatedAt.TimeOfDay;

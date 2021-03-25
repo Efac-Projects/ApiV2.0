@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace App.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20210323133741_Change appoinment schema")]
-    partial class Changeappoinmentschema
+    [Migration("20210325041202_initial")]
+    partial class initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -46,20 +46,20 @@ namespace App.Migrations
                     b.Property<DateTime>("StartMoment")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("TestTreatment")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("ThreatmentTreatmentId")
+                    b.Property<int>("ThreatmentId")
                         .HasColumnType("int");
 
                     b.Property<string>("Timezone")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("TreatmentId")
+                        .HasColumnType("int");
+
                     b.HasKey("AppointmentId");
 
                     b.HasIndex("BusinessId");
 
-                    b.HasIndex("ThreatmentTreatmentId");
+                    b.HasIndex("TreatmentId");
 
                     b.ToTable("Appointments");
                 });
@@ -445,11 +445,9 @@ namespace App.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("App.Models.Treatment", "Threatment")
+                    b.HasOne("App.Models.Treatment", null)
                         .WithMany("appointments")
-                        .HasForeignKey("ThreatmentTreatmentId");
-
-                    b.Navigation("Threatment");
+                        .HasForeignKey("TreatmentId");
                 });
 
             modelBuilder.Entity("App.Models.Business", b =>

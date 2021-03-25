@@ -16,12 +16,12 @@ namespace App.Models
         public string FirstName { get; set; }  // Use this first name in notification
         public string LastName { get; set; }
 
-        public int TestTreatment { get; set; }
-
         [Phone]
         public string PhoneNumber { get; set; }
-        public string Timezone { get; set; }  
-        public Treatment Threatment { get; set; }
+        public string Timezone { get; set; }
+        
+        [ForeignKey("TreatmentId")]
+        public int ThreatmentId { get; set; }
         public DateTime StartMoment { get; set; }  // time in sms sender 
         public DateTime EndMoment => StartMoment;
         public DateTime CreatedAt { get; set; }
