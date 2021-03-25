@@ -44,9 +44,6 @@ namespace App.Migrations
                     b.Property<DateTime>("StartMoment")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("ThreatmentId")
-                        .HasColumnType("int");
-
                     b.Property<string>("Timezone")
                         .HasColumnType("nvarchar(max)");
 
@@ -443,9 +440,11 @@ namespace App.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("App.Models.Treatment", null)
+                    b.HasOne("App.Models.Treatment", "Treatment")
                         .WithMany("appointments")
                         .HasForeignKey("TreatmentId");
+
+                    b.Navigation("Treatment");
                 });
 
             modelBuilder.Entity("App.Models.Business", b =>

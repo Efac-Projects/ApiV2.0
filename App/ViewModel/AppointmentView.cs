@@ -1,4 +1,5 @@
 ﻿using App.Models;
+using AspNetIdentityDemo.Api.Models;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -21,12 +22,14 @@ namespace App.ViewModel
 
         public DateTime CreatedAt = DateTime.Now;
         public string TimeZone = TimeZoneInfo.Local.DisplayName;
+        private ApplicationDbContext _context;
+
         public string PhoneNumber { get; set; }
 
         public int TreatmentId { get; set; }
 
 
-
-
     }
+
+
 }
