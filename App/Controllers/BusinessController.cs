@@ -206,8 +206,24 @@ namespace App.Controllers
             if (System.IO.File.Exists(imagePath))
                 System.IO.File.Delete(imagePath);
         }
-        
 
+        // Delete business
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteBusiness(int id)
+        {
+            var business = await _context.Businesses.FindAsync(id);
+
+            if (business == null)
+            {
+                return NotFound();
+            }
+
+            _context.Businesses.Remove(business);
+            await _context.SaveChangesAsync();
+
+            return Ok();
+
+        }
 
     }
 }
