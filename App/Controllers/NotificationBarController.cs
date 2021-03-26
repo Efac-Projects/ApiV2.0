@@ -75,7 +75,8 @@ namespace App.Controllers
                 NotificationId = notificationView.NotificationId,
                 OpeningHour = notificationView.OpeningHour,
                 ClosingHour = notificationView.ClosingHour,
-                Notification = notificationView.Notification
+                Notification = notificationView.Notification,
+                BusinessId = notificationView.BusinessId
             };
 
             _context.NotificationBars.Add(notification);
