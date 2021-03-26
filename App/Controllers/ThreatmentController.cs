@@ -54,8 +54,52 @@ namespace App.Controllers
             return Ok(Treatment);
         }
 
-        // update - kavindi 
+        // update treatment
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateTreatment(int id, TreatmentView treatmentView)
+        {
+            var treatment = await _context.Treatments.FindAsync(id);
 
-        // deleted - kavindi
+            if (treatment == null)
+            {
+                return NotFound();
+            }
+
+          
+            treatment.Duration = treatmentView.Duration;
+            treatment.Category = treatmentView.Category;
+            treatment.Price = treatmentView.Price;
+            treatment.DoctorName = treatmentView.DoctorName;
+
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                return NotFound();
+            }
+
+            return Ok(treatment);
+        }
+
+        // Delete treatment
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteTreatment(int id)
+        {
+            var treatment = await _context.Treatments.FindAsync(id);
+
+            if (treatment == null)
+            {
+                return NotFound();
+            }
+
+            _context.Treatments.Remove(treatment);
+            await _context.SaveChangesAsync();
+
+            return Ok();
+
+        }
     }
 }
