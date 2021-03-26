@@ -122,7 +122,7 @@ namespace App.Controllers
 
             if (result.IsSuccess)
             {
-                return Redirect($"{_configuration["AppUrl"]}/ConfirmEmail.html");
+                return Redirect($"http://localhost:3000/index"); // redired page after confirm email address
             }
 
             return BadRequest(result);
@@ -165,11 +165,15 @@ namespace App.Controllers
             // retuen all users with these attributes
             foreach (var user in users)
             {
+                var role = await _userManager.GetRolesAsync(user);
+                var rolename = role.FirstOrDefault<String>();
+
                 UserView member = new UserView {
                     UserID=user.Id,
                     Email = user.Email,
-                    UserName = user.UserName
-                };
+                    UserName = user.UserName,
+                    UserRole = rolename
+            };
 
                 Alluser.Add(member);
             }

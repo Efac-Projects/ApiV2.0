@@ -141,7 +141,7 @@ namespace App.Controllers
 
 
         /// Deletes the logged in business // - kavindi
-
+        
         [HttpDelete("Business/{id}")]
         public IActionResult DeleteBusiness()
         {

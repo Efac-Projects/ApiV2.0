@@ -80,15 +80,15 @@ namespace App.Service
             if (result.Succeeded)
             {
                 // generate token for verify email address
-                //var confirmEmailToken = await _userManger.GenerateEmailConfirmationTokenAsync(identityUser);
+                var confirmEmailToken = await _userManger.GenerateEmailConfirmationTokenAsync(identityUser);
 
-                // var encodedEmailToken = Encoding.UTF8.GetBytes(confirmEmailToken);
-                // var validEmailToken = WebEncoders.Base64UrlEncode(encodedEmailToken);
+                 var encodedEmailToken = Encoding.UTF8.GetBytes(confirmEmailToken);
+                 var validEmailToken = WebEncoders.Base64UrlEncode(encodedEmailToken);
 
-                // string url = $"{_configuration["AppUrl"]}/api/auth/confirmemail?userid={identityUser.Id}&token={validEmailToken}";
+                 string url = $"{_configuration["AppUrl"]}api/auth/confirmemail?userid={identityUser.Id}&token={validEmailToken}";
 
-                //await _mailService.SendEmailAsync(identityUser.Email, "Confirm your email", $"<h1>Welcome to Auth Demo</h1>" +
-                //  $"<p>Please confirm your email by <a href='{url}'>Clicking here</a></p>");
+                await _mailService.SendEmailAsync(identityUser.Email, "Confirm your email", $"<h1>Welcome to Auth Demo</h1>" +
+                  $"<p>Please confirm your email by <a href='{url}'>Clicking here</a></p>");
 
                 // jwt
 
@@ -156,16 +156,16 @@ namespace App.Service
 
             if (result.Succeeded)
             {
-                // generate token for verify email address
-                //var confirmEmailToken = await _userManger.GenerateEmailConfirmationTokenAsync(identityUser);
+               // generate token for verify email address
+                var confirmEmailToken = await _userManger.GenerateEmailConfirmationTokenAsync(identityUser);
 
-                //var encodedEmailToken = Encoding.UTF8.GetBytes(confirmEmailToken);
-                //var validEmailToken = WebEncoders.Base64UrlEncode(encodedEmailToken);
+                var encodedEmailToken = Encoding.UTF8.GetBytes(confirmEmailToken);
+                var validEmailToken = WebEncoders.Base64UrlEncode(encodedEmailToken);
 
-                //string url = $"{_configuration["AppUrl"]}/api/auth/confirmemail?userid={identityUser.Id}&token={validEmailToken}";
+                string url = $"{_configuration["AppUrl"]}api/auth/confirmemail?userid={identityUser.Id}&token={validEmailToken}";
 
-                //await _mailService.SendEmailAsync(identityUser.Email, "Confirm your email", $"<h1>Welcome to Auth Demo</h1>" +
-                //  $"<p>Please confirm your email by <a href='{url}'>Clicking here</a></p>");
+                await _mailService.SendEmailAsync(identityUser.Email, "Confirm your email", $"<h1>Welcome to Auth Demo</h1>" +
+                 $"<p>Please confirm your email by <a href='{url}'>Clicking here</a></p>");
 
                 if (!await _roleManager.RoleExistsAsync(UserRoles.User))
                 {

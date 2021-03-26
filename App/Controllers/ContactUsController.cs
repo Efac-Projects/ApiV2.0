@@ -21,20 +21,22 @@ namespace App.Controllers
             _context = context;
         }
 
-        // ContactUs by ID
+        // Get All contact messages
+        // api/contactus/id
         [HttpGet("{id}")]
-        public async Task<ActionResult<IEnumerable<ContactView>>> GetContactbyId(int id)
+        public ActionResult<IEnumerable<ContactView>> GetContactbyId(Guid id)
         {
-            var contact = await _context.ContactUs.FindAsync(id);
+            var messages = _context.ContactUs.ToList();
 
-            if (contact == null)
-            {
+            if (messages == null) {
                 return NotFound();
             }
 
-            return Ok(contact);
+            return Ok(messages);
+           
         }
 
+        //api/contactus
         [HttpPost]
         public async Task<ActionResult<ContactView>> CreateContact(ContactView contactView)
         {
@@ -43,7 +45,9 @@ namespace App.Controllers
                 ContactId = contactView.ContactId,
                 FullName = contactView.FullName,
                 Email = contactView.Email,
-                Message = contactView.Message
+                Message = contactView.Message,
+                // ?
+
             };
 
             _context.ContactUs.Add(contact);
@@ -65,8 +69,10 @@ namespace App.Controllers
             _context.ContactUs.Remove(contact);
             await _context.SaveChangesAsync();
 
-            return Ok();
+            return Ok(contact);
         }
+
+        // get all
 
     }
 }

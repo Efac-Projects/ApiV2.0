@@ -23,6 +23,7 @@ namespace App.Controllers
         }
 
         // get notification by id
+        //api/notificationbar/id
         [HttpGet("{id}")]
         public async Task<ActionResult<IEnumerable<NotificationView>>> GetNotificationbyId(int id)
         {
@@ -37,6 +38,7 @@ namespace App.Controllers
         }
 
         // Update notificationbar
+        //api/notificationbar/id
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateNotificationBar(int id, NotificationView notificationView)
         {
@@ -67,7 +69,8 @@ namespace App.Controllers
         }
 
         //create notification
-        [HttpPost]
+        //api/notificationbar/id
+        [HttpPost("{id}")]
         public async Task<ActionResult<NotificationView>> createNotification(NotificationView notificationView)
         {
             var notification = new NotificationBar

@@ -43,10 +43,15 @@ namespace App.Controllers
                 TreatmentId = treatmentView.Id,
                 BusinessId = treatmentView.BusinessId,
                 Specification = treatmentView.Specification,
-                Duration = treatmentView.Duration,
                 Price = treatmentView.Price,
-                Category = treatmentView.Category,
-                DoctorName = treatmentView.DoctorName
+                Name = treatmentView.Name,
+                DoctorName = treatmentView.DoctorName,
+                Availability = treatmentView.Availability,
+                Day = treatmentView.Day,
+                Date = treatmentView.Date,
+                TimeFrom = treatmentView.TimeFrom,
+                TimeTo = treatmentView.TimeTo
+
             };
 
             _context.Treatments.Add(Treatment);
@@ -65,11 +70,18 @@ namespace App.Controllers
                 return NotFound();
             }
 
-          
-            treatment.Duration = treatmentView.Duration;
-            treatment.Category = treatmentView.Category;
+
+
+
+            treatment.Specification = treatmentView.Specification;
             treatment.Price = treatmentView.Price;
+            treatment.Name = treatmentView.Name;
             treatment.DoctorName = treatmentView.DoctorName;
+            treatment.Availability = treatmentView.Availability;
+            treatment.Day = treatmentView.Day;
+            treatment.Date = treatmentView.Date;
+            treatment.TimeFrom = treatmentView.TimeFrom;
+            treatment.TimeTo = treatmentView.TimeTo;
 
 
             try

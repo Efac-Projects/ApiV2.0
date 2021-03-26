@@ -12,18 +12,15 @@ namespace App.ViewModel
         public int Id { get; set; }
 
         public Guid BusinessId { get; set; }
-        public string Specification { get; set; } // specification - to be 
-        
-        // format(hour,minutues,seconds)
-        public TimeSpan Duration { get; set; } // 
-        
-        // MEN,WOMEN,CHILDREN
-        public TreatmentCategory Category { get; set; }
+        public string Specification { get; set; }  
+  
+        public string Name { get; set; }
+        public string Availability { get; set; }
 
-       
-
-        // maximum appoinment for threatment
-        
+        public DateTime Day { get; set; }
+        public DateTime Date { get; set; }
+        public DateTime TimeFrom { get; set; }
+        public DateTime TimeTo { get; set; }
         public double Price { get; set; }
 
         public string DoctorName { get; set; }

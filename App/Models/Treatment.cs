@@ -6,36 +6,28 @@ using System.Threading.Tasks;
 
 namespace App.Models
 {
-    public enum TreatmentCategory
-    {
-        MEN,
-        WOMEN,
-        CHILDREN
-    }
     public class Treatment
     {
         [Required]
         public int TreatmentId { get; set; }
-        public string Specification { get; set; } 
-        public TimeSpan Duration { get; set; }
-        public TreatmentCategory Category { get; set; }
+
+        public string Name { get; set; }
+        public string Availability { get; set; }
+
+        public DateTime Day { get; set; }
+        public DateTime Date { get; set; }
+        public string Specification { get; set; }  
+        
         public double Price { get; set; }
-
-        //public int MaxAppoinment { get; set; }
-
         public Guid BusinessId { get; set; }
         public string DoctorName { get; set; } // name of doctor
+        public DateTime TimeFrom { get; set; }
+        public DateTime TimeTo { get; set; }
+      
         public List<Appointment> appointments { get; set; }
 
         public Treatment() { }
 
-        public Treatment(string name, TimeSpan duration, TreatmentCategory category, double price )
-        {
-            Specification = name;
-            Duration = duration;
-            Category = category;
-            Price = price;
-            
-        }
+       
     }
 }
