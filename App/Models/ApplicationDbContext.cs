@@ -21,8 +21,8 @@ namespace AspNetIdentityDemo.Api.Models
         public DbSet<Appointment> Appointments { get; set; }
         public DbSet<Review> Reviews { get; set; }
         public DbSet<Treatment> Treatments { get; set; }
-        public DbSet<OpeningHour> OpeningHours { get; set; }
-        public DbSet<WorkDay> WorkDays { get; set; }
+        
+       
 
     }
 }

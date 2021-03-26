@@ -52,21 +52,12 @@ namespace App.Repositories
             return business;
         }
 
-        public Business GetBy(int id)
+        //works
+        public Business GetById(Guid id)
         {
             return _businesses
                  .Include(hd => hd.Treatments)
-                 //.Include(hd => hd.Appointments)
-                   //  .ThenInclude(hd => hd.Threatment)
-                 // Change some code here
-                 .Include(hd => hd.OpeningHours)
-                     .ThenInclude(hd => hd.WorkDays)
-                     .ThenInclude(hd => hd.Hours)
-                     .ThenInclude(h => h.StartTime)
-                 .Include(hd => hd.OpeningHours)
-                     .ThenInclude(hd => hd.WorkDays)
-                     .ThenInclude(hd => hd.Hours)
-                     .ThenInclude(h => h.EndTime)
+                
                  .SingleOrDefault(hd => hd.BusinessId == id);
         }
 
@@ -76,16 +67,7 @@ namespace App.Repositories
             return _businesses.Where(hd => hd.Name.StartsWith(name))
                                .Include(hd => hd.Treatments)
                                .Include(hd => hd.Appointments)
-                                  // .ThenInclude(hd => hd.Threatment)
-
-                               .Include(hd => hd.OpeningHours)
-                                   .ThenInclude(hd => hd.WorkDays)
-                                   .ThenInclude(hd => hd.Hours)
-                                   .ThenInclude(h => h.StartTime)
-                               .Include(hd => hd.OpeningHours)
-                                   .ThenInclude(hd => hd.WorkDays)
-                                   .ThenInclude(hd => hd.Hours)
-                                   .ThenInclude(h => h.EndTime)
+                                 
                                .ToList();
         }
 
@@ -95,16 +77,7 @@ namespace App.Repositories
             return _businesses.Where(hd => hd.Email == email)
                                 .Include(hd => hd.Treatments)
                                 .Include(hd => hd.Appointments)
-                                   // .ThenInclude(hd => hd.Threatment)
-                                // code changed to one to one relationship
-                                .Include(hd => hd.OpeningHours)
-                                    .ThenInclude(hd => hd.WorkDays)
-                                    .ThenInclude(hd => hd.Hours)
-                                    .ThenInclude(h => h.StartTime)
-                                .Include(hd => hd.OpeningHours)
-                                    .ThenInclude(hd => hd.WorkDays)
-                                    .ThenInclude(hd => hd.Hours)
-                                    .ThenInclude(h => h.EndTime)
+                                
                                 .SingleOrDefault();
         }
 

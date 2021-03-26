@@ -75,12 +75,12 @@ namespace App.Controllers
                 .ToListAsync();
         }
 
-        // GET: api/Business/1
+        // GET: api/Business/1 // 
 
         [HttpGet("{id}")]
-        public ActionResult<Business> GetBusiness(int id)
+        public ActionResult<Business> GetBusiness(Guid id)
         {
-            Business business = _businessRepository.GetBy(id);
+            Business business = _businessRepository.GetById(id);
 
             if (business == null)
                 return NotFound();
@@ -120,7 +120,7 @@ namespace App.Controllers
 
             business.Name = businessView.Name;
             business.TotalCrowd = businessView.TotalCrowd;
-            business.CurrentCrowd = businessView.CurrentCrowd;
+           
             business.PhoneNumber = businessView.PhoneNumber;
             business.Summary = businessView.Summary;
 
@@ -140,7 +140,7 @@ namespace App.Controllers
         }
 
 
-        /// Deletes the logged in business
+        /// Deletes the logged in business // - kavindi
 
         [HttpDelete("Business/{id}")]
         public IActionResult DeleteBusiness()
@@ -170,7 +170,7 @@ namespace App.Controllers
                 Name = businessView.Name,
                 Email = businessView.Email,
                 TotalCrowd = businessView.TotalCrowd,
-                CurrentCrowd = businessView.CurrentCrowd,
+                
                 PhoneNumber = businessView.PhoneNumber,
                 BusinessType = businessView.BusinessType,
                 Summary = businessView.Summary,

@@ -11,14 +11,16 @@ namespace App.ViewModel
     {
         public int Id { get; set; }
 
-        public int BusinessId { get; set; }
-        public string Name { get; set; } // specification - to be 
+        public Guid BusinessId { get; set; }
+        public string Specification { get; set; } // specification - to be 
         
-        public TimeSpanView Duration { get; set; } // 
+        // format(hour,minutues,seconds)
+        public TimeSpan Duration { get; set; } // 
         
+        // MEN,WOMEN,CHILDREN
         public TreatmentCategory Category { get; set; }
 
-        // available time - controller for edit
+       
 
         // maximum appoinment for threatment
         
