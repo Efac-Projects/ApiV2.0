@@ -10,7 +10,6 @@ namespace App.ViewModel
     public class TreatmentView
     {
         public int Id { get; set; }
-
         public int BusinessId { get; set; }
         public string Name { get; set; } // specification - to be 
         
