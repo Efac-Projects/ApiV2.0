@@ -113,6 +113,20 @@ namespace App.Controllers
 
         }
 
+        // send appoinment confirmation message
+        // api/appointment/confirm
+        [HttpPost("confirm")]
+        public ActionResult<ConfirmAppoinment> ConfirmAppoinment(ConfirmAppoinment confirmAppoinment)
+        {
+
+
+            BackgroundJob.Schedule<SendAppoinmentConfirm>((job) => job.Execute(confirmAppoinment), TimeSpan.FromSeconds(30));
+
+            return Ok("Appoinment has succesfully confirmed");
+        }
+
+
+
         // Delete appointment
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteAppointment(int id)
