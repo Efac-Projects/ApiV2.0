@@ -12,7 +12,7 @@ namespace App.ViewModel
     {
         public int AppointmentId { get; set; }
 
-        public int BusinessId { get; set; }
+        public Guid BusinessId { get; set; }
 
         public string Firstname { get; set; }
 
@@ -21,8 +21,9 @@ namespace App.ViewModel
         public DateTime StartMoment { get; set; }
 
         public DateTime CreatedAt = DateTime.Now;
-        public string TimeZone = TimeZoneInfo.Local.DisplayName;
-        private ApplicationDbContext _context;
+        public int Age { get; set; }
+        public string Gender { get; set; }
+
 
         public string PhoneNumber { get; set; }
 

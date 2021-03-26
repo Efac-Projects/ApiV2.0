@@ -7,7 +7,7 @@ namespace App.Models
 {
     public interface IBusinessRepository
     {
-        Business GetBy(int id);
+        Business GetById(Guid id);
         Business GetByEmail(string email);  // this returns all business info
 
         Business GetBusiness(string email); // this only returns business 

@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace App.Migrations
 {
-    public partial class initial : Migration
+    public partial class changeguidtype : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -44,6 +44,39 @@ namespace App.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AspNetUsers", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Contact",
+                columns: table => new
+                {
+                    ContactId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    FullName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    BusinessId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Email = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    PhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Message = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Contact", x => x.ContactId);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Notifications",
+                columns: table => new
+                {
+                    NotificationId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    OpeningHour = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    ClosingHour = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    BusinessId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Notification = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Notifications", x => x.NotificationId);
                 });
 
             migrationBuilder.CreateTable(
@@ -198,8 +231,7 @@ namespace App.Migrations
                 name: "Businesses",
                 columns: table => new
                 {
-                    BusinessId = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    BusinessId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Email = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     TotalCrowd = table.Column<int>(type: "int", nullable: false),
@@ -252,7 +284,7 @@ namespace App.Migrations
                     Duration = table.Column<TimeSpan>(type: "time", nullable: false),
                     Category = table.Column<int>(type: "int", nullable: false),
                     Price = table.Column<double>(type: "float", nullable: false),
-                    BusinessId = table.Column<int>(type: "int", nullable: false),
+                    BusinessId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     DoctorName = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
@@ -305,9 +337,11 @@ namespace App.Migrations
                 {
                     AppointmentId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    BusinessId = table.Column<int>(type: "int", nullable: false),
+                    BusinessId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     FirstName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     LastName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Age = table.Column<int>(type: "int", nullable: false),
+                    Gender = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     PhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Timezone = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     TreatmentId = table.Column<int>(type: "int", nullable: true),
@@ -430,6 +464,12 @@ namespace App.Migrations
 
             migrationBuilder.DropTable(
                 name: "AspNetUserTokens");
+
+            migrationBuilder.DropTable(
+                name: "Contact");
+
+            migrationBuilder.DropTable(
+                name: "Notifications");
 
             migrationBuilder.DropTable(
                 name: "Reviews");

@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace App.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20210325060453_initial")]
+    [Migration("20210326035100_initial")]
     partial class initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -28,13 +28,19 @@ namespace App.Migrations
                         .HasColumnType("int")
                         .UseIdentityColumn();
 
-                    b.Property<int>("BusinessId")
+                    b.Property<int>("Age")
                         .HasColumnType("int");
+
+                    b.Property<Guid>("BusinessId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("FirstName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Gender")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("LastName")
@@ -63,10 +69,9 @@ namespace App.Migrations
 
             modelBuilder.Entity("App.Models.Business", b =>
                 {
-                    b.Property<int>("BusinessId")
+                    b.Property<Guid>("BusinessId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .UseIdentityColumn();
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("BusinessType")
                         .HasColumnType("nvarchar(max)");
@@ -103,6 +108,57 @@ namespace App.Migrations
                     b.HasIndex("OpeningHoursId");
 
                     b.ToTable("Businesses");
+                });
+
+            modelBuilder.Entity("App.Models.ContactUs", b =>
+                {
+                    b.Property<int>("ContactId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .UseIdentityColumn();
+
+                    b.Property<Guid>("BusinessId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Email")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FullName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Message")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PhoneNumber")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("ContactId");
+
+                    b.ToTable("Contact");
+                });
+
+            modelBuilder.Entity("App.Models.NotificationBar", b =>
+                {
+                    b.Property<int>("NotificationId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .UseIdentityColumn();
+
+                    b.Property<Guid>("BusinessId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("ClosingHour")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Notification")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("OpeningHour")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("NotificationId");
+
+                    b.ToTable("Notifications");
                 });
 
             modelBuilder.Entity("App.Models.OpeningHour", b =>
@@ -193,8 +249,8 @@ namespace App.Migrations
                         .HasColumnType("int")
                         .UseIdentityColumn();
 
-                    b.Property<int>("BusinessId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("BusinessId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<int>("Category")
                         .HasColumnType("int");

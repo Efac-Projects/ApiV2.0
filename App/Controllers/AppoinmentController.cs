@@ -41,9 +41,9 @@ namespace App.Controllers
         // api/appoinment/id
         //  works
         [HttpGet("{id}")]
-        public ActionResult<IEnumerable<AppointmentView>> GetAppoinmentbyId(int id)
+        public ActionResult<IEnumerable<AppointmentView>> GetAppoinmentbyId(Guid id)
         {
-            var appoinment = _context.Appointments.Where(b => b.BusinessId == id).ToList();
+            var appoinment = _context.Appointments.Where(b => b.BusinessId == id).Include(ap => ap.Treatment).ToList();
 
             return Ok(appoinment);
 
@@ -64,12 +64,6 @@ namespace App.Controllers
             {
                 return NotFound();
             }
-
-
-
-
-
-
 
             try
             {
@@ -100,7 +94,8 @@ namespace App.Controllers
                 StartMoment = appointmentView.StartMoment,
                 PhoneNumber = appointmentView.PhoneNumber,
                 CreatedAt = appointmentView.CreatedAt,
-                Timezone = appointmentView.TimeZone,
+                Age = appointmentView.Age,
+                Gender = appointmentView.Gender,
                 Treatment = _context.Treatments.Find(appointmentView.TreatmentId)
                 
 

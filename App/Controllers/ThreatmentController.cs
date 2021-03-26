@@ -24,10 +24,10 @@ namespace App.Controllers
         // get threamtment of business location
         // api/threatment/id  ; businessId
         [HttpGet("{id}")]
-        public ActionResult<IEnumerable<TreatmentView>> GetAppoinmentbyId(int id)
+        public ActionResult<IEnumerable<TreatmentView>> GetAppoinmentbyId(Guid id)
         {
-            var threatments = _context.Businesses.Where(b => b.BusinessId == id)
-                                .Include(b => b.Treatments).ToList();
+            var threatments = _context.Treatments.Where(b => b.BusinessId == id).ToList();
+                               
 
             return Ok(threatments);
 
@@ -42,8 +42,10 @@ namespace App.Controllers
             {
                 TreatmentId = treatmentView.Id,
                 BusinessId = treatmentView.BusinessId,
-                Name = treatmentView.Name,
+                Specification = treatmentView.Specification,
+                Duration = treatmentView.Duration,
                 Price = treatmentView.Price,
+                Category = treatmentView.Category,
                 DoctorName = treatmentView.DoctorName
             };
 
@@ -51,5 +53,9 @@ namespace App.Controllers
             _context.SaveChanges();
             return Ok(Treatment);
         }
+
+        // update - kavindi 
+
+        // deleted - kavindi
     }
 }
