@@ -17,10 +17,10 @@ namespace App.ViewModel
         public string Name { get; set; }
         public string Availability { get; set; }
 
-        public DateTime Day { get; set; }
+        public string Day { get; set; }
         public DateTime Date { get; set; }
-        public DateTime TimeFrom { get; set; }
-        public DateTime TimeTo { get; set; }
+        public string TimeFrom { get; set; }
+        public string TimeTo { get; set; }
         public double Price { get; set; }
 
         public string DoctorName { get; set; }

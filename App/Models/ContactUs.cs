@@ -15,8 +15,6 @@ namespace App.Models
         
         public string Email { get; set; }
 
-        [Phone]
-        public string PhoneNumber { get; set; }
         public string Message { get; set; }
     }
 }
