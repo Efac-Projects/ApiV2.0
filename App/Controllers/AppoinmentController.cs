@@ -43,6 +43,7 @@ namespace App.Controllers
         [HttpGet("{id}")]
         public ActionResult<IEnumerable<AppointmentView>> GetAppoinmentbyId(Guid id)
         {
+            // CODE CHANGED HERE
             var appoinment = _context.Appointments.Where(b => b.BusinessId == id).Include(ap => ap.Treatment).ToList();
 
             return Ok(appoinment);

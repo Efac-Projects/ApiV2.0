@@ -14,15 +14,15 @@ namespace App.Models
         public string Name { get; set; }
         public string Availability { get; set; }
 
-        public DateTime Day { get; set; }
+        public string Day { get; set; }
         public DateTime Date { get; set; }
         public string Specification { get; set; }  
         
         public double Price { get; set; }
         public Guid BusinessId { get; set; }
         public string DoctorName { get; set; } // name of doctor
-        public DateTime TimeFrom { get; set; }
-        public DateTime TimeTo { get; set; }
+        public string TimeFrom { get; set; }
+        public string TimeTo { get; set; }
       
         public List<Appointment> appointments { get; set; }
 

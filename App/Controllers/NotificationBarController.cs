@@ -25,9 +25,9 @@ namespace App.Controllers
         // get notification by id
         //api/notificationbar/id
         [HttpGet("{id}")]
-        public async Task<ActionResult<IEnumerable<NotificationView>>> GetNotificationbyId(int id)
+        public ActionResult<IEnumerable<NotificationView>> GetNotificationbyId(Guid id)
         {
-            var notification = await _context.NotificationBars.FindAsync(id);
+            var notification =  _context.NotificationBars.Where(no => no.BusinessId == id).ToList();
 
             if (notification == null)
             {
@@ -74,7 +74,7 @@ namespace App.Controllers
         public async Task<ActionResult<NotificationView>> createNotification(NotificationView notificationView)
         {
             var notification = new NotificationBar
-            {
+            { BusinessId = notificationView.BusinessId,
                 NotificationId = notificationView.NotificationId,
                 OpeningHour = notificationView.OpeningHour,
                 ClosingHour = notificationView.ClosingHour,
