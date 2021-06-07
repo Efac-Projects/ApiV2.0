@@ -17,7 +17,7 @@ namespace App.HangFire
         }
 
         private const string MessageTemplate =
-          "Hi {0}. Just a reminder that you have an appointment coming up at {1}. - @NoQueue";
+          "Hi {0}. Just a reminder that you have an appointment coming up at {1}. One of our agent will confirm your appoinment";
 
         public void Execute(Appointment appointment)
         {

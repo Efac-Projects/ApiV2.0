@@ -116,9 +116,6 @@ namespace App.Migrations
                     b.Property<string>("Message")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("PhoneNumber")
-                        .HasColumnType("nvarchar(max)");
-
                     b.HasKey("ContactId");
 
                     b.ToTable("ContactUs");

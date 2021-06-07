@@ -23,8 +23,8 @@ namespace App.Controllers
 
         // Get All contact messages
         // api/contactus/id
-        [HttpGet("{id}")]
-        public ActionResult<IEnumerable<ContactView>> GetContactbyId(Guid id)
+        [HttpGet]
+        public ActionResult<IEnumerable<ContactView>> GetContactbyId()
         {
             var messages = _context.ContactUs.ToList();
 
@@ -46,7 +46,7 @@ namespace App.Controllers
                 FullName = contactView.FullName,
                 Email = contactView.Email,
                 Message = contactView.Message,
-                // ?
+            
 
             };
 
@@ -72,7 +72,7 @@ namespace App.Controllers
             return Ok(contact);
         }
 
-        // get all
+        
 
     }
 }

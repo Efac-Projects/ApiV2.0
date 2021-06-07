@@ -41,7 +41,7 @@ namespace App
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<ApplicationDbContext>(opt => opt.UseSqlServer(Configuration.GetConnectionString("ApplicationDbContext")));
-
+            
 
             services.AddCors();
             services.AddControllers().AddNewtonsoftJson(options =>
@@ -121,18 +121,22 @@ namespace App
 
             app.UseHttpsRedirection();
 
-            app.UseStaticFiles(new StaticFileOptions
-            {
-                FileProvider = new PhysicalFileProvider(Path.Combine(env.ContentRootPath, "Images")),
-                RequestPath = "/Images"
-            });
-            app.UseStaticFiles();
+            //app.UseStaticFiles(new StaticFileOptions
+            //{
+              //  FileProvider = new PhysicalFileProvider(Path.Combine(env.ContentRootPath, "Images")),
+               // RequestPath = "/Images"
+            //});
+         
 
             app.UseHangfireDashboard();
           
             app.UseCors(options => options.WithOrigins("http://localhost:3000").AllowAnyHeader().AllowAnyMethod());
             app.UseAuthentication();
             app.UseRouting();
+
+            app.UseDefaultFiles();
+            app.UseStaticFiles();
+
             app.UseAuthorization();
 
 
@@ -141,6 +145,7 @@ namespace App
             {
                 endpoints.MapControllers();
                 endpoints.MapHangfireDashboard();
+                endpoints.MapFallbackToController("Index", "Fallback");
             });
             
             
