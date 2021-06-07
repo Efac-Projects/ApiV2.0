@@ -49,7 +49,7 @@ namespace App.Controllers
         // This get method is used to gel all business info inside business proffile
         
         [HttpGet]
-        //[Authorize(Policy = UserRoles.Admin)]
+        //[Authorize(Policy = UserRoles.User)]
         public ActionResult<IEnumerable<Business>> GetBusinesses(string name = null)
         {
             if (string.IsNullOrEmpty(name))

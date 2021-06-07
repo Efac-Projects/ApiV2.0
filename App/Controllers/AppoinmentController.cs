@@ -105,7 +105,7 @@ namespace App.Controllers
 
             TimeSpan time = appointmentView.StartMoment.TimeOfDay - appointmentView.CreatedAt.TimeOfDay;
             int timeValue = (int)time.TotalMinutes - 30; 
-           // BackgroundJob.Schedule<SendNotificationAppoinment>((job) =>job.Execute(appointment) ,TimeSpan.FromMinutes(1));
+            BackgroundJob.Schedule<SendNotificationAppoinment>((job) =>job.Execute(appointment) ,TimeSpan.FromSeconds(30));
 
             _repo.Add(appointment);
             _repo.SaveChanges();

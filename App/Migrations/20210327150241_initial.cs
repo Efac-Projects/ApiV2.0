@@ -73,9 +73,7 @@ namespace App.Migrations
                     ContactId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     FullName = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    BusinessId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Email = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    PhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Message = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
@@ -226,12 +224,16 @@ namespace App.Migrations
                 {
                     TreatmentId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Availability = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Day = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Date = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Specification = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Duration = table.Column<TimeSpan>(type: "time", nullable: false),
-                    Category = table.Column<int>(type: "int", nullable: false),
                     Price = table.Column<double>(type: "float", nullable: false),
                     BusinessId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    DoctorName = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    DoctorName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    TimeFrom = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    TimeTo = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
