@@ -46,7 +46,7 @@ namespace App.Controllers
                 FullName = contactView.FullName,
                 Email = contactView.Email,
                 Message = contactView.Message,
-                // ?
+            
 
             };
 
@@ -72,7 +72,7 @@ namespace App.Controllers
             return Ok(contact);
         }
 
-        // get all
+        
 
     }
 }
