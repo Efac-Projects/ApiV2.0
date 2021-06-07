@@ -173,7 +173,8 @@ namespace App.Controllers
                 Name = businessView.Name,
                 Email = businessView.Email,
                 TotalCrowd = businessView.TotalCrowd,
-                
+                Lattitude = businessView.Lattitude,
+                Longitude = businessView.Longitude,
                 PhoneNumber = businessView.PhoneNumber,
                 BusinessType = businessView.BusinessType,
                 Summary = businessView.Summary,
@@ -226,6 +227,29 @@ namespace App.Controllers
 
             return Ok();
 
+        }
+
+        // get all business location for the map
+        //api/business/map
+        [HttpGet("map")]
+        public ActionResult GetBusinessMap() {
+
+            var businesses = _businessRepository.GetAll();
+            List<MapLocation> lists = new List<MapLocation>();
+            var locations = lists;
+            foreach ( var biz in businesses)
+            {
+                MapLocation map = new MapLocation
+                {
+                    latitue = biz.Lattitude,
+                    longitude = biz.Longitude
+                };
+
+                lists.Append(map);
+            }
+            
+
+            return Ok(lists);
         }
 
     }

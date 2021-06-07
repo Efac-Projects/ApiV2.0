@@ -18,6 +18,7 @@ namespace App.ViewModel
 
         public string Lastname { get; set; }
 
+        public DateTime StartDate { get; set; } // date of appoinment
         public DateTime StartMoment { get; set; }
 
         public DateTime CreatedAt = DateTime.Now;

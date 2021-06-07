@@ -92,6 +92,7 @@ namespace App.Controllers
                 BusinessId = appointmentView.BusinessId,
                 FirstName = appointmentView.Firstname,
                 LastName = appointmentView.Lastname,
+                StartDate = appointmentView.StartDate,
                 StartMoment = appointmentView.StartMoment,
                 PhoneNumber = appointmentView.PhoneNumber,
                 CreatedAt = appointmentView.CreatedAt,
