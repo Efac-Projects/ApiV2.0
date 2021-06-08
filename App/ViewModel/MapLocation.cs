@@ -7,7 +7,7 @@ namespace App.ViewModel
 {
     public class MapLocation
     {
-        public string latitue { get; set; }
-        public string longitude { get; set; }
+        public string lat { get; set; }
+        public string lng { get; set; }
     }
 }

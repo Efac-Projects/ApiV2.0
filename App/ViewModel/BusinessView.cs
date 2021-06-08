@@ -18,8 +18,8 @@ namespace App.ViewModel
         public string Email { get; set; }
         public string BusinessType { get; set; }
         public string Summary { get; set; }
-        public string Lattitude { get; set; }
-        public string Longitude { get; set; }
+        public string Lat { get; set; }
+        public string Lng { get; set; }
 
         public IFormFile ImageFile { get; set; }
 

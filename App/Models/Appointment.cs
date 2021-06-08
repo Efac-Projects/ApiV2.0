@@ -28,7 +28,7 @@ namespace App.Models
 
         [ForeignKey("TreatmentId")]
         public Treatment Treatment { get; set; }
-        public DateTime StartDate { get; set; } // date of appoinment
+        public string StartDate { get; set; } // date of appoinment
         public DateTime StartMoment { get; set; }  // time of appoinment
         public DateTime EndMoment => (StartMoment); // end time of appoinmet - tbd
         public DateTime CreatedAt { get; set; } // creation time of appoinmet, automatically assign the time
