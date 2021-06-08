@@ -8,6 +8,7 @@ namespace App.ViewModel
 {
     public class ConfirmAppoinment
     {
+        public int AppoinmentId { get; set; }
         public string Message { get; set; }
         [Phone]
         public string Phone { get; set; }

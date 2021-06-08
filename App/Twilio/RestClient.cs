@@ -28,11 +28,19 @@ namespace App.Twilio
         public void SendSmsMessage(string phoneNumber, string message)
         {
             var to = new PhoneNumber(phoneNumber);
-            MessageResource.Create(
-                to,
-                from: new PhoneNumber(_twilioNumber),
-                body: message,
-                client: _client);
+            try
+            {
+                MessageResource.Create(
+               to,
+               from: new PhoneNumber(_twilioNumber),
+               body: message,
+               client: _client);
+            }
+            catch (Exception e)
+            {
+
+                Console.WriteLine(e.Message);
+            }
         }
     }
 }

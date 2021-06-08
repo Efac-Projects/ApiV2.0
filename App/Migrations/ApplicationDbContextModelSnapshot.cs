@@ -47,8 +47,8 @@ namespace App.Migrations
                     b.Property<string>("PhoneNumber")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("StartDate")
-                        .HasColumnType("datetime2");
+                    b.Property<string>("StartDate")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("StartMoment")
                         .HasColumnType("datetime2");
@@ -83,10 +83,10 @@ namespace App.Migrations
                     b.Property<string>("ImageName")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Lattitude")
+                    b.Property<string>("Lat")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Longitude")
+                    b.Property<string>("Lng")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
