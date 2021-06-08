@@ -25,6 +25,7 @@ namespace App.ViewModel
         public int Age { get; set; }
         public string Gender { get; set; }
 
+        public bool IsConfirmed = false;
 
         public string PhoneNumber { get; set; }
 

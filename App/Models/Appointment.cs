@@ -24,7 +24,7 @@ namespace App.Models
         public string Gender { get; set; }
         [Phone]
         public string PhoneNumber { get; set; }
-        
+        public bool IsConfirmed { get; set; }
 
         [ForeignKey("TreatmentId")]
         public Treatment Treatment { get; set; }
@@ -33,18 +33,13 @@ namespace App.Models
         public DateTime EndMoment => (StartMoment); // end time of appoinmet - tbd
         public DateTime CreatedAt { get; set; } // creation time of appoinmet, automatically assign the time
 
-        
-        
-
-
-
-
-        
-
 
         public Appointment() { }
 
-       
+       public void ConfirmApp()
+        {
+            IsConfirmed = true;
+        }
 
 
 

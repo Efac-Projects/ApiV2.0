@@ -120,7 +120,10 @@ namespace App.Controllers
         [HttpPost("confirm")]
         public ActionResult<ConfirmAppoinment> ConfirmAppoinment(ConfirmAppoinment confirmAppoinment)
         {
+            Appointment appointment = _context.Appointments.Find(confirmAppoinment.AppoinmentId);
 
+            appointment.ConfirmApp(); // confirm current appoinmet
+            _context.SaveChanges();
 
             BackgroundJob.Schedule<SendAppoinmentConfirm>((job) => job.Execute(confirmAppoinment), TimeSpan.FromSeconds(30));
 
