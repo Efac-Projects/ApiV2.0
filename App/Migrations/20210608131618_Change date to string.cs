@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace App.Migrations
 {
-    public partial class addmaplocation : Migration
+    public partial class Changedatetostring : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -229,7 +229,7 @@ namespace App.Migrations
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Availability = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Day = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Date = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Date = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Specification = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Price = table.Column<double>(type: "float", nullable: false),
                     BusinessId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
@@ -260,6 +260,7 @@ namespace App.Migrations
                     Age = table.Column<int>(type: "int", nullable: false),
                     Gender = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     PhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    IsConfirmed = table.Column<bool>(type: "bit", nullable: false),
                     TreatmentId = table.Column<int>(type: "int", nullable: true),
                     StartDate = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     StartMoment = table.Column<DateTime>(type: "datetime2", nullable: false),

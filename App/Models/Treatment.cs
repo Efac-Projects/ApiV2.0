@@ -15,7 +15,7 @@ namespace App.Models
         public string Availability { get; set; }
 
         public string Day { get; set; }
-        public DateTime Date { get; set; }
+        public string Date { get; set; }
         public string Specification { get; set; }  
         
         public double Price { get; set; }
