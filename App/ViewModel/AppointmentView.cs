@@ -25,7 +25,7 @@ namespace App.ViewModel
         public DateTime CreatedAt = DateTime.Now;
         public int Age { get; set; }
         public string Gender { get; set; }
-
+        
         public bool IsConfirmed = false;
 
         public string PhoneNumber { get; set; }

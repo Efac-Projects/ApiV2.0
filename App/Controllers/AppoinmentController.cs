@@ -158,7 +158,12 @@ namespace App.Controllers
         public ActionResult GetTime(Guid id)
         {
 
-            var time = _context.Appointments.Where(ap => ap.BusinessId == id).Select(ap => new { ap.AppointmentId, ap.Start, ap.End }).ToList();
+            var time = _context.Appointments.Where(ap => ap.BusinessId == id && ap.IsConfirmed == true).Select(ap => new
+            {
+                title = ap.Treatment.DoctorName,
+                start = ap.Start,
+                end = ap.End
+            }).ToList();
 
 
             return Ok(time);
