@@ -167,6 +167,10 @@ namespace App.Service
                 await _mailService.SendEmailAsync(identityUser.Email, "Confirm your email", $"<h1>Welcome to Auth Demo</h1>" +
                  $"<p>Please confirm your email by <a href='{url}'>Clicking here</a></p>");
 
+                // jwt
+
+                string tokenString = await _jwtService.RegisterJWT(model);
+
                 if (!await _roleManager.RoleExistsAsync(UserRoles.User))
                 {
                     await _roleManager.CreateAsync(new IdentityRole(UserRoles.User));
@@ -186,9 +190,9 @@ namespace App.Service
                 }
 
 
-                return new UserManagerResponse
+                return new UserManagerResponse    // admin user response change
                 {
-                    Token = "Business User created successfully!",
+                    Token = tokenString,
                     IsSuccess = true,
                 };
             }

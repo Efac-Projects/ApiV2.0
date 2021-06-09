@@ -23,8 +23,8 @@ namespace App.Models    // edited now have to change database view
 
         public string BusinessType { get; set; }
         public string Summary { get; set; }
-        public string Lat { get; set; } 
-        public string Lng { get; set; }
+        public string lat { get; set; } 
+        public string lng { get; set; }
         public IList<Appointment> Appointments { get; set; }
         public IList<Treatment> Treatments { get; set; } // looks like doctors in medical centre
 
