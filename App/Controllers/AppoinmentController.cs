@@ -169,6 +169,20 @@ namespace App.Controllers
             return Ok(time);
         }
 
+        // return booked timed slots for treatments - not approved
+        // //api/appoinment/treatment/{id}
+        [HttpGet("tretment/{id}")]
+        public ActionResult GetTimesforTreat(int id)
+        {
+            var time = _context.Appointments.Where(ap => ap.Treatment.TreatmentId == id).Select(ap => new
+            {
+                start = ap.Start,
+                end = ap.End
+            }).ToList();
+
+            return Ok(time);
+        }
+
         //  Appointment to AppointmentView
 
         private static AppointmentView AppointmentViewReturn(Appointment appointment) =>
