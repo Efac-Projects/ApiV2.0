@@ -57,8 +57,8 @@ namespace App.Models    // edited now have to change database view
         {
             foreach (Appointment a in Appointments)
             {
-                if (!(startMoment <= a.EndMoment && endMoment <= a.StartMoment))
-                    if (!(startMoment >= a.EndMoment && endMoment >= a.StartMoment))
+                if (!(startMoment <= a.End && endMoment <= a.Start))
+                    if (!(startMoment >= a.End && endMoment >= a.Start))
                         return true;
             }
 

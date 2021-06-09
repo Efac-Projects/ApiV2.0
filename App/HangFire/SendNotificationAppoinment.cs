@@ -28,7 +28,7 @@ namespace App.HangFire
             
                 twilioRestClient.SendSmsMessage(
                appointment.PhoneNumber,
-               string.Format(MessageTemplate, appointment.FirstName, appointment.StartMoment.ToString("t")));
+               string.Format(MessageTemplate, appointment.FirstName, appointment.Start.ToString("t")));
             
 
 

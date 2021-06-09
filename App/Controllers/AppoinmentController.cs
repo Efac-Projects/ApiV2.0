@@ -85,6 +85,7 @@ namespace App.Controllers
         {
 
             int id = appointmentView.TreatmentId;
+            var treatment = _context.Treatments.Find(id);
 
             var appointment = new Appointment()
             {
@@ -93,9 +94,10 @@ namespace App.Controllers
                 FirstName = appointmentView.Firstname,
                 LastName = appointmentView.Lastname,
                 StartDate = appointmentView.StartDate,
-                StartMoment = appointmentView.StartMoment,
+                Start = appointmentView.Start,
+                End = appointmentView.Start.Add(treatment.Duration),
                 PhoneNumber = appointmentView.PhoneNumber,
-                CreatedAt = appointmentView.CreatedAt,
+                CreatedAt = appointmentView.CreatedAt.ToShortDateString(),
                 Age = appointmentView.Age,
                 Gender = appointmentView.Gender,
                 Treatment = _context.Treatments.Find(appointmentView.TreatmentId)
@@ -104,7 +106,7 @@ namespace App.Controllers
             };
 
 
-            TimeSpan time = appointmentView.StartMoment.TimeOfDay - appointmentView.CreatedAt.TimeOfDay;
+            TimeSpan time = appointmentView.Start.TimeOfDay - appointmentView.CreatedAt.TimeOfDay;
             int timeValue = (int)time.TotalMinutes - 30; 
             BackgroundJob.Schedule<SendNotificationAppoinment>((job) =>job.Execute(appointment) ,TimeSpan.FromSeconds(30));
 
@@ -147,6 +149,19 @@ namespace App.Controllers
             await _context.SaveChangesAsync();
 
             return Ok();
+
+        }
+
+        // return time slots for business
+        //api/appoinment/time/{id}
+        [HttpGet("time/{id}")]
+        public ActionResult GetTime(Guid id)
+        {
+
+            var time = _context.Appointments.Where(ap => ap.BusinessId == id).Select(ap => new { ap.AppointmentId, ap.Start, ap.End }).ToList();
+
+
+            return Ok(time);
         }
 
         //  Appointment to AppointmentView

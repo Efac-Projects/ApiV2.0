@@ -16,8 +16,10 @@ namespace App.Models
 
         public string Day { get; set; }
         public string Date { get; set; }
-        public string Specification { get; set; }  
-        
+        public string Specification { get; set; }
+
+        public TimeSpan Duration { get; set; } // duration per treatment
+
         public double Price { get; set; }
         public Guid BusinessId { get; set; }
         public string DoctorName { get; set; } // name of doctor
