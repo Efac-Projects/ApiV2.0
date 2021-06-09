@@ -173,8 +173,8 @@ namespace App.Controllers
                 Name = businessView.Name,
                 Email = businessView.Email,
                 TotalCrowd = businessView.TotalCrowd,
-                Lat = businessView.Lat,
-                Lng = businessView.Lng,
+                lat = businessView.lat,
+                lng = businessView.lng,
                 PhoneNumber = businessView.PhoneNumber,
                 BusinessType = businessView.BusinessType,
                 Summary = businessView.Summary,
@@ -241,8 +241,8 @@ namespace App.Controllers
             {
                 MapLocation map = new MapLocation
                 {
-                    lat = biz.Lat,
-                    lng = biz.Lng
+                    lat = biz.lat,
+                    lng = biz.lng
                 };
 
                 lists.Append(map);

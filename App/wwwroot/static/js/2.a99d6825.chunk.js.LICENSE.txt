@@ -17,6 +17,10 @@ object-assign
  * Released under the MIT License
  */
 
+/*!
+ * Programatically add the following
+ */
+
 /*! *****************************************************************************
 Copyright (c) Microsoft Corporation.
 
