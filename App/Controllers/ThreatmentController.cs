@@ -45,6 +45,7 @@ namespace App.Controllers
                 Specification = treatmentView.Specification,
                 Price = treatmentView.Price,
                 Name = treatmentView.Name,
+                Duration = TimeSpan.Parse(treatmentView.Duration),
                 DoctorName = treatmentView.DoctorName,
                 Availability = treatmentView.Availability,
                 Day = treatmentView.Day,

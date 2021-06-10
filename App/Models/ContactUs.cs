@@ -12,9 +12,13 @@ namespace App.Models
         [Key]
         public int ContactId { get; set; }
         public string FullName { get; set; }
-        
         public string Email { get; set; }
-
         public string Message { get; set; }
+        public string Reply { get; set; }
+
+        public void AddReply(string r) {
+            this.Reply = r;
+        }
+
     }
 }

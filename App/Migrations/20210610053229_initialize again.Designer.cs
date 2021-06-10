@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace App.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20210608131618_Change date to string")]
-    partial class Changedatetostring
+    [Migration("20210610053229_initialize again")]
+    partial class initializeagain
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -34,7 +34,10 @@ namespace App.Migrations
                     b.Property<Guid>("BusinessId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTime>("CreatedAt")
+                    b.Property<string>("CreatedAt")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("End")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("FirstName")
@@ -52,11 +55,11 @@ namespace App.Migrations
                     b.Property<string>("PhoneNumber")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<DateTime>("Start")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("StartDate")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("StartMoment")
-                        .HasColumnType("datetime2");
 
                     b.Property<int?>("TreatmentId")
                         .HasColumnType("int");
@@ -88,12 +91,6 @@ namespace App.Migrations
                     b.Property<string>("ImageName")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Lat")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Lng")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
@@ -108,6 +105,12 @@ namespace App.Migrations
 
                     b.Property<int>("TotalCrowd")
                         .HasColumnType("int");
+
+                    b.Property<string>("lat")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("lng")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("BusinessId");
 
@@ -128,6 +131,9 @@ namespace App.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Message")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Reply")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("ContactId");
@@ -201,6 +207,9 @@ namespace App.Migrations
 
                     b.Property<string>("DoctorName")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<TimeSpan>("Duration")
+                        .HasColumnType("time");
 
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");

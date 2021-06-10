@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace App.Migrations
 {
-    public partial class Changedatetostring : Migration
+    public partial class initializeagain : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -59,8 +59,8 @@ namespace App.Migrations
                     PostalCode = table.Column<int>(type: "int", nullable: false),
                     BusinessType = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Summary = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Lat = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Lng = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    lat = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    lng = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     ImageName = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
@@ -76,7 +76,8 @@ namespace App.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     FullName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Email = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Message = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    Message = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Reply = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -231,6 +232,7 @@ namespace App.Migrations
                     Day = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Date = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Specification = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Duration = table.Column<TimeSpan>(type: "time", nullable: false),
                     Price = table.Column<double>(type: "float", nullable: false),
                     BusinessId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     DoctorName = table.Column<string>(type: "nvarchar(max)", nullable: true),
@@ -263,8 +265,9 @@ namespace App.Migrations
                     IsConfirmed = table.Column<bool>(type: "bit", nullable: false),
                     TreatmentId = table.Column<int>(type: "int", nullable: true),
                     StartDate = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    StartMoment = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    Start = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    End = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    CreatedAt = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {

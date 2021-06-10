@@ -40,11 +40,12 @@ namespace App.Controllers
         // find appoinment with business id
         // api/appoinment/id
         //  works
+        
         [HttpGet("{id}")]
         public ActionResult<IEnumerable<AppointmentView>> GetAppoinmentbyId(Guid id)
         {
             // CODE CHANGED HERE
-            var appoinment = _context.Appointments.Where(b => b.BusinessId == id && b.IsConfirmed == false).ToList();
+            var appoinment = _context.Appointments.Where(b => b.BusinessId == id && b.IsConfirmed==false).ToList();
 
             return Ok(appoinment);
 
