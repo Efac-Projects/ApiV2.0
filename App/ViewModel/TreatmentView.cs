@@ -13,7 +13,7 @@ namespace App.ViewModel
 
         public Guid BusinessId { get; set; }
         public string Specification { get; set; }
-        public TimeSpan Duration { get; set; }
+        public string Duration { get; set; }
 
         public string Name { get; set; }
         public string Availability { get; set; }

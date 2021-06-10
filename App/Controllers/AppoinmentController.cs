@@ -44,7 +44,7 @@ namespace App.Controllers
         public ActionResult<IEnumerable<AppointmentView>> GetAppoinmentbyId(Guid id)
         {
             // CODE CHANGED HERE
-            var appoinment = _context.Appointments.Where(b => b.BusinessId == id).Include(ap => ap.Treatment).ToList();
+            var appoinment = _context.Appointments.Where(b => b.BusinessId == id && b.IsConfirmed==false).ToList();
 
             return Ok(appoinment);
 

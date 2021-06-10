@@ -1,4 +1,5 @@
 ﻿using App.Models;
+using App.Service;
 using App.ViewModel;
 using AspNetIdentityDemo.Api.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -15,10 +16,12 @@ namespace App.Controllers
     public class ContactUsController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly IMailService _mailService;
 
-        public ContactUsController(ApplicationDbContext context)
+        public ContactUsController(ApplicationDbContext context, IMailService mailService)
         {
             _context = context;
+            _mailService = mailService;
         }
 
         // Get All contact messages
@@ -33,7 +36,7 @@ namespace App.Controllers
             }
 
             return Ok(messages);
-           
+
         }
 
         //api/contactus
@@ -46,7 +49,7 @@ namespace App.Controllers
                 FullName = contactView.FullName,
                 Email = contactView.Email,
                 Message = contactView.Message,
-            
+
 
             };
 
@@ -72,7 +75,35 @@ namespace App.Controllers
             return Ok(contact);
         }
 
-        
+
+        // get reply
+        //api/contactus/id
+        [HttpGet("{id}")]
+        public ActionResult GetReply(int id) {
+
+            var reply = _context.ContactUs.Where(c => c.ContactId == id).Select(c => c.Reply).ToList();
+            
+            return Ok(200);
+        }
+
+        // send reply
+        // api/contactus/reply
+        [HttpPost("reply")]
+
+        public ActionResult SendReply(ContactView contactView) {
+
+            ContactUs contact = _context.ContactUs.Find(contactView.ContactId);
+
+            contact.AddReply(contactView.Reply);
+
+            // send email
+             _mailService.SendEmailAsync(contact.Email, "Hello There", $"<h3>Welcome to No Queue</h3>" +
+                  $"<p>{contactView.Reply}</p>");
+
+            
+            return Ok();
+        }
+
 
     }
 }

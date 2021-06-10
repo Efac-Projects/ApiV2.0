@@ -131,6 +131,9 @@ namespace App.Migrations
                     b.Property<string>("Message")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("Reply")
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("ContactId");
 
                     b.ToTable("ContactUs");

@@ -87,7 +87,7 @@ namespace App.Service
 
                  string url = $"{_configuration["AppUrl"]}api/auth/confirmemail?userid={identityUser.Id}&token={validEmailToken}";
 
-                await _mailService.SendEmailAsync(identityUser.Email, "Confirm your email", $"<h1>Welcome to Auth Demo</h1>" +
+                await _mailService.SendEmailAsync(identityUser.Email, "Confirm your email", $"<h1>Welcome to No Queue</h1>" +
                   $"<p>Please confirm your email by <a href='{url}'>Clicking here</a></p>");
 
                 // jwt
