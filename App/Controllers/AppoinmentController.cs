@@ -40,6 +40,7 @@ namespace App.Controllers
         // find appoinment with business id
         // api/appoinment/id
         //  works
+        
         [HttpGet("{id}")]
         public ActionResult<IEnumerable<AppointmentView>> GetAppoinmentbyId(Guid id)
         {
